@@ -9,6 +9,8 @@ const genAI = new GoogleGenerativeAI(apiKey);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 const embeddingModel = genAI.getGenerativeModel({ model: "text-embedding-004" });
 
+import { RepoAnalysis } from "./repository-analyzer";
+
 export interface ProjectInputs {
   title: string;
   category: string;
@@ -16,9 +18,18 @@ export interface ProjectInputs {
   features: string;
   problemStatement: string;
   academicLevel: string;
+  repoAnalysis?: RepoAnalysis;
 }
 
 export async function generateProjectDocumentation(inputs: ProjectInputs, retryCount = 0): Promise<Record<string, string>> {
+  const repoContext = inputs.repoAnalysis ? `
+    GitHub Repository Context:
+    - Analyzed Tech Stack: ${inputs.repoAnalysis.tech_stack.join(", ")}
+    - Identified Modules: ${inputs.repoAnalysis.modules.join(", ")}
+    - Identified Database: ${inputs.repoAnalysis.database}
+    - Repository Features: ${inputs.repoAnalysis.features.join(", ")}
+  ` : "";
+
   const prompt = `
     Generate complete academic project documentation in JSON format for the following project:
     Title: ${inputs.title}
@@ -27,6 +38,7 @@ export async function generateProjectDocumentation(inputs: ProjectInputs, retryC
     Features: ${inputs.features}
     Problem Statement: ${inputs.problemStatement}
     Academic Level: ${inputs.academicLevel}
+    ${repoContext}
 
     The JSON must contain exactly these keys:
     "Abstract", "Introduction", "Problem Statement", "Objectives", "Existing System", "Proposed System", "Methodology", "Modules", "Database Design", "Testing Strategy", "Future Scope", "Conclusion", "References", "Viva Questions", "PPT Outline"

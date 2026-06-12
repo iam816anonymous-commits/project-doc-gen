@@ -16,7 +16,8 @@ export default function GeneratePage() {
     teamSize: 1,
     academicLevel: 'BTech',
     email: '',
-    otp: ''
+    otp: '',
+    githubUrl: ''
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -114,8 +115,23 @@ export default function GeneratePage() {
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto bg-white p-8 rounded-2xl shadow-sm border">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center">Project Details</h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2 text-center">Project Details</h1>
+        <p className="text-center text-gray-500 mb-8 italic">New: Paste GitHub URL to auto-fill (Beta)</p>
+
         <form onSubmit={handleRequestOTP} className="space-y-6">
+          <div className="bg-blue-50 p-4 rounded-xl border border-blue-100 mb-8">
+             <label className="block text-sm font-bold text-blue-800 mb-2">GitHub Repository URL (Optional)</label>
+             <input
+                type="url"
+                name="githubUrl"
+                placeholder="https://github.com/user/project"
+                value={formData.githubUrl}
+                onChange={handleChange}
+                className="w-full p-3 border border-blue-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none bg-white"
+             />
+             <p className="text-xs text-blue-600 mt-2">✨ Automatic analysis of README, code structure, and dependencies.</p>
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <input required type="text" name="title" placeholder="Project Title" value={formData.title} onChange={handleChange} className="w-full p-2 border rounded"/>
             <select name="projectType" value={formData.projectType} onChange={handleChange} className="w-full p-2 border rounded">

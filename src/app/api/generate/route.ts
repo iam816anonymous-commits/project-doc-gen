@@ -3,6 +3,7 @@ import db from '@/lib/db';
 import { v4 as uuidv4 } from 'uuid';
 import { generateProjectDocumentation, generateProjectEmbedding } from '@/lib/gemini';
 import { createFingerprint } from '@/lib/similarity';
+import { analyzeGitHubRepo } from '@/lib/repository-analyzer';
 import { cookies } from 'next/headers';
 
 export async function POST(request: Request) {
@@ -17,13 +18,20 @@ export async function POST(request: Request) {
       cookieStore.set('user_id', userId, { httpOnly: true });
     }
 
-    // 1. Fingerprint and Cache Lookup
+    // 1. GitHub Analysis (if URL provided)
+    let repoAnalysis = null;
+    if (details.githubUrl) {
+      repoAnalysis = await analyzeGitHubRepo(details.githubUrl);
+    }
+
+    // 2. Fingerprint and Cache Lookup
     const fingerprint = createFingerprint({
       title: details.title,
       category: details.projectType,
       techStack: details.techStack,
       features: details.features,
-      academicLevel: details.academicLevel
+      academicLevel: details.academicLevel,
+      githubUrl: details.githubUrl || ''
     });
 
     const cached = db.prepare('SELECT generated_content_json FROM report_cache WHERE fingerprint = ?').get(fingerprint) as { generated_content_json: string } | undefined;
@@ -43,15 +51,16 @@ export async function POST(request: Request) {
           techStack: details.techStack,
           features: details.features,
           problemStatement: details.problemStatement,
-          academicLevel: details.academicLevel
+          academicLevel: details.academicLevel,
+          repoAnalysis: repoAnalysis || undefined
         });
 
         // 4. Cache the result
         const embedding = await generateProjectEmbedding(`${details.title} ${details.projectType} ${details.techStack} ${details.features}`);
         db.prepare(`
-          INSERT INTO report_cache (id, fingerprint, embedding, project_title, category, tech_stack, features_json, academic_level, generated_content_json)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-        `).run(uuidv4(), fingerprint, JSON.stringify(embedding), details.title, details.projectType, details.techStack, JSON.stringify(details.features), details.academicLevel, JSON.stringify(content));
+          INSERT INTO report_cache (id, fingerprint, embedding, project_title, category, tech_stack, features_json, academic_level, generated_content_json, github_url)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `).run(uuidv4(), fingerprint, JSON.stringify(embedding), details.title, details.projectType, details.techStack, JSON.stringify(details.features), details.academicLevel, JSON.stringify(content), details.githubUrl || null);
       } catch (error) {
         console.error('Gemini error, falling back to templates:', error);
         // Fallback or re-throw
@@ -64,8 +73,8 @@ export async function POST(request: Request) {
       INSERT INTO projects (
         id, user_id, title, project_type, tech_stack,
         problem_statement, features, team_size,
-        academic_level, content
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        academic_level, content, github_url
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `).run(
       projectId,
       userId,
@@ -76,7 +85,8 @@ export async function POST(request: Request) {
       details.features,
       details.teamSize,
       details.academicLevel,
-      JSON.stringify(content)
+      JSON.stringify(content),
+      details.githubUrl || null
     );
 
     return NextResponse.json({ projectId, content });
