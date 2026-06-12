@@ -16,6 +16,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
     title: string;
     tech_stack: string;
     academic_level: string;
+    university: string;
     content: string;
     is_paid: number;
   } | undefined;
@@ -29,14 +30,30 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
-      <main className="flex-1 p-8 max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold">{project.title}</h1>
-        {!isPaid && (
-          <Link href={`/project/${project.id}/pay`} className="bg-green-600 text-white px-6 py-2 rounded">
-            Unlock Full Package - ₹99
-          </Link>
-        )}
-        <div className="space-y-12 mt-8">
+      <main className="flex-1 p-8 max-w-5xl mx-auto">
+        <div className="flex justify-between items-start mb-8 border-b pb-6">
+          <div>
+            <h1 className="text-4xl font-extrabold text-gray-900">{project.title}</h1>
+            <p className="text-gray-500 font-medium">{project.university} • {project.academic_level} • {project.tech_stack}</p>
+          </div>
+          {!isPaid && (
+            <Link href={`/project/${project.id}/pay`} className="bg-green-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-green-700 transition shadow-lg">
+              Unlock Complete Submission Kit - ₹99
+            </Link>
+          )}
+          {isPaid && (
+            <div className="flex gap-4">
+              <a href={`/api/export/pdf?projectId=${project.id}`} className="bg-blue-600 text-white px-4 py-2 rounded-lg font-bold">PDF</a>
+              <a href={`/api/export/docx?projectId=${project.id}`} className="bg-blue-600 text-white px-4 py-2 rounded-lg font-bold">DOCX</a>
+            </div>
+          )}
+        </div>
+
+        <div className="bg-blue-50 border border-blue-100 p-4 rounded-xl mb-12 text-center">
+           <p className="text-blue-800 font-bold">📦 Complete Submission Kit: Documentation, Viva Prep & PPT Presentation included.</p>
+        </div>
+
+        <div className="space-y-16">
           {SECTIONS.map((section) => (
             <section key={section}>
               <h2 className="text-2xl font-bold border-b">{section}</h2>

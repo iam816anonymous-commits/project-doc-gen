@@ -31,7 +31,8 @@ export async function POST(request: Request) {
       techStack: details.techStack,
       features: details.features,
       academicLevel: details.academicLevel,
-      githubUrl: details.githubUrl || ''
+      githubUrl: details.githubUrl || '',
+      university: details.university || 'Standard'
     });
 
     const cached = db.prepare('SELECT generated_content_json FROM report_cache WHERE fingerprint = ?').get(fingerprint) as { generated_content_json: string } | undefined;
@@ -52,15 +53,16 @@ export async function POST(request: Request) {
           features: details.features,
           problemStatement: details.problemStatement,
           academicLevel: details.academicLevel,
+          university: details.university,
           repoAnalysis: repoAnalysis || undefined
         });
 
         // 4. Cache the result
         const embedding = await generateProjectEmbedding(`${details.title} ${details.projectType} ${details.techStack} ${details.features}`);
         db.prepare(`
-          INSERT INTO report_cache (id, fingerprint, embedding, project_title, category, tech_stack, features_json, academic_level, generated_content_json, github_url)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        `).run(uuidv4(), fingerprint, JSON.stringify(embedding), details.title, details.projectType, details.techStack, JSON.stringify(details.features), details.academicLevel, JSON.stringify(content), details.githubUrl || null);
+          INSERT INTO report_cache (id, fingerprint, embedding, project_title, category, tech_stack, features_json, academic_level, generated_content_json, github_url, university)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `).run(uuidv4(), fingerprint, JSON.stringify(embedding), details.title, details.projectType, details.techStack, JSON.stringify(details.features), details.academicLevel, JSON.stringify(content), details.githubUrl || null, details.university || 'Standard');
       } catch (error) {
         console.error('Gemini error, falling back to templates:', error);
         // Fallback or re-throw
@@ -73,8 +75,8 @@ export async function POST(request: Request) {
       INSERT INTO projects (
         id, user_id, title, project_type, tech_stack,
         problem_statement, features, team_size,
-        academic_level, content, github_url
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        academic_level, content, github_url, university
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `).run(
       projectId,
       userId,
@@ -86,7 +88,8 @@ export async function POST(request: Request) {
       details.teamSize,
       details.academicLevel,
       JSON.stringify(content),
-      details.githubUrl || null
+      details.githubUrl || null,
+      details.university || 'Standard'
     );
 
     return NextResponse.json({ projectId, content });

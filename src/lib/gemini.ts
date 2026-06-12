@@ -18,6 +18,7 @@ export interface ProjectInputs {
   features: string;
   problemStatement: string;
   academicLevel: string;
+  university?: string;
   repoAnalysis?: RepoAnalysis;
 }
 
@@ -41,14 +42,15 @@ export async function generateProjectDocumentation(inputs: ProjectInputs, retryC
     ${repoContext}
 
     The JSON must contain exactly these keys:
-    "Abstract", "Introduction", "Problem Statement", "Objectives", "Existing System", "Proposed System", "Methodology", "Modules", "Database Design", "Testing Strategy", "Future Scope", "Conclusion", "References", "Viva Questions", "PPT Outline"
+    "Abstract", "Introduction", "Problem Statement", "Objectives", "Existing System", "Proposed System", "Methodology", "Modules", "Database Design", "Testing Strategy", "Future Scope", "Conclusion", "References", "Viva Questions", "PPT Outline", "Viva Preparation Kit", "PPT Presentation Kit"
 
     Requirements:
-    - Formal academic tone.
+    - Formal academic tone, adhering to ${inputs.university || 'standard academic'} formatting guidelines.
     - No markdown formatting inside the values.
     - High quality, original content.
     - Minimum 300 words for Abstract and Introduction.
-    - Structured lists for Viva Questions and PPT Outline.
+    - "Viva Preparation Kit" must include 50 questions with detailed expected answers.
+    - "PPT Presentation Kit" must include a 10-15 slide deck outline with speaker notes for each slide.
     - Suitable for ${inputs.academicLevel} level.
   `;
 

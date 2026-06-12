@@ -15,6 +15,7 @@ export default function GeneratePage() {
     features: '',
     teamSize: 1,
     academicLevel: 'BTech',
+    university: 'Standard',
     email: '',
     otp: '',
     githubUrl: ''
@@ -153,7 +154,17 @@ export default function GeneratePage() {
               <option>BTech</option>
               <option>MTech</option>
             </select>
-            <input type="number" name="teamSize" value={formData.teamSize} onChange={handleChange} min="1" className="w-full p-2 border rounded"/>
+            <select name="university" value={formData.university} onChange={handleChange} className="w-full p-2 border rounded">
+              <option value="Standard">Other / Standard University</option>
+              <option>JNTU</option>
+              <option>VTU</option>
+              <option>Anna University</option>
+              <option>Osmania University</option>
+              <option>Mumbai University</option>
+            </select>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <input type="number" name="teamSize" value={formData.teamSize} onChange={handleChange} min="1" placeholder="Team Size" className="w-full p-2 border rounded"/>
           </div>
           <div className="border-t pt-6">
             <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>

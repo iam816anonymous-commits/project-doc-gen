@@ -24,6 +24,7 @@ db.exec(`
     content JSON NOT NULL,
     is_paid BOOLEAN DEFAULT 0,
     github_url TEXT,
+    university TEXT,
     generated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id)
   );
@@ -51,6 +52,7 @@ db.exec(`
     academic_level TEXT NOT NULL,
     generated_content_json TEXT NOT NULL,
     github_url TEXT,
+    university TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   );
 

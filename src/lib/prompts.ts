@@ -25,7 +25,9 @@ export const SECTIONS = [
   "Conclusion",
   "References",
   "Viva Questions",
-  "PPT Outline"
+  "PPT Outline",
+  "Viva Preparation Kit",
+  "PPT Presentation Kit"
 ];
 
 export function getSectionTemplate(section: string, details: ProjectDetails): string {
