@@ -29,15 +29,17 @@ export default async function AdminPage() {
       (SELECT COUNT(*) FROM projects) as total_projects,
       (SELECT COUNT(*) FROM payment_submissions) as total_submissions,
       (SELECT COUNT(*) FROM payment_submissions WHERE status = 'APPROVED') as approved_payments,
-      (SELECT COUNT(*) FROM projects WHERE is_paid = 1) as paid_projects
+      (SELECT COUNT(*) FROM projects WHERE is_paid = 1) as paid_projects,
+      (SELECT COUNT(*) FROM report_cache) as cached_reports
     FROM users LIMIT 1
   `).get() as {
     total_users: number,
     total_projects: number,
     total_submissions: number,
     approved_payments: number,
-    paid_projects: number
-  } || { total_users: 0, total_projects: 0, total_submissions: 0, approved_payments: 0, paid_projects: 0 };
+    paid_projects: number,
+    cached_reports: number
+  } || { total_users: 0, total_projects: 0, total_submissions: 0, approved_payments: 0, paid_projects: 0, cached_reports: 0 };
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
@@ -45,10 +47,11 @@ export default async function AdminPage() {
         <h1 className="text-3xl font-bold mb-8 text-gray-900">Admin Dashboard</h1>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-6 gap-4 mb-12">
            {[
              { label: 'Total Users', val: stats.total_users },
              { label: 'Projects Generated', val: stats.total_projects },
+             { label: 'Cached Reports', val: stats.cached_reports },
              { label: 'Screenshots Uploaded', val: stats.total_submissions },
              { label: 'Payments Approved', val: stats.approved_payments },
              { label: 'Revenue (₹)', val: stats.approved_payments * 99 }

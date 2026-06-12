@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
 import db from '@/lib/db';
 import { v4 as uuidv4 } from 'uuid';
-import { SECTIONS, getSectionTemplate } from '@/lib/prompts';
+import { generateProjectDocumentation, generateProjectEmbedding } from '@/lib/gemini';
+import { createFingerprint } from '@/lib/similarity';
 import { cookies } from 'next/headers';
 
 export async function POST(request: Request) {
@@ -16,13 +17,49 @@ export async function POST(request: Request) {
       cookieStore.set('user_id', userId, { httpOnly: true });
     }
 
-    const projectId = uuidv4();
-    const content: Record<string, string> = {};
-
-    SECTIONS.forEach(section => {
-      content[section] = getSectionTemplate(section, details);
+    // 1. Fingerprint and Cache Lookup
+    const fingerprint = createFingerprint({
+      title: details.title,
+      category: details.projectType,
+      techStack: details.techStack,
+      features: details.features,
+      academicLevel: details.academicLevel
     });
 
+    const cached = db.prepare('SELECT generated_content_json FROM report_cache WHERE fingerprint = ?').get(fingerprint) as { generated_content_json: string } | undefined;
+
+    let content;
+    if (cached) {
+      console.log('Cache hit for fingerprint:', fingerprint);
+      content = JSON.parse(cached.generated_content_json);
+    } else {
+      // 2. Similarity Check (Optional suggestion logic can go here)
+
+      // 3. Gemini Generation
+      try {
+        content = await generateProjectDocumentation({
+          title: details.title,
+          category: details.projectType,
+          techStack: details.techStack,
+          features: details.features,
+          problemStatement: details.problemStatement,
+          academicLevel: details.academicLevel
+        });
+
+        // 4. Cache the result
+        const embedding = await generateProjectEmbedding(`${details.title} ${details.projectType} ${details.techStack} ${details.features}`);
+        db.prepare(`
+          INSERT INTO report_cache (id, fingerprint, embedding, project_title, category, tech_stack, features_json, academic_level, generated_content_json)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `).run(uuidv4(), fingerprint, JSON.stringify(embedding), details.title, details.projectType, details.techStack, JSON.stringify(details.features), details.academicLevel, JSON.stringify(content));
+      } catch (error) {
+        console.error('Gemini error, falling back to templates:', error);
+        // Fallback or re-throw
+        throw error;
+      }
+    }
+
+    const projectId = uuidv4();
     db.prepare(`
       INSERT INTO projects (
         id, user_id, title, project_type, tech_stack,

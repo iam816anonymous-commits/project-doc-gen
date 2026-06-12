@@ -4,7 +4,6 @@ import path from 'path';
 const dbPath = path.join(process.cwd(), 'jules.db');
 const db = new Database(dbPath);
 
-// Initialize tables
 db.exec(`
   CREATE TABLE IF NOT EXISTS users (
     id TEXT PRIMARY KEY,
@@ -28,17 +27,6 @@ db.exec(`
     FOREIGN KEY (user_id) REFERENCES users(id)
   );
 
-  CREATE TABLE IF NOT EXISTS payments (
-    id TEXT PRIMARY KEY,
-    user_id TEXT NOT NULL,
-    project_id TEXT NOT NULL,
-    amount INTEGER NOT NULL,
-    payment_status TEXT NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (project_id) REFERENCES projects(id)
-  );
-
   CREATE TABLE IF NOT EXISTS payment_submissions (
     id TEXT PRIMARY KEY,
     user_id TEXT NOT NULL,
@@ -50,6 +38,22 @@ db.exec(`
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (project_id) REFERENCES projects(id)
   );
+
+  CREATE TABLE IF NOT EXISTS report_cache (
+    id TEXT PRIMARY KEY,
+    fingerprint TEXT UNIQUE NOT NULL,
+    embedding JSON,
+    project_title TEXT NOT NULL,
+    category TEXT NOT NULL,
+    tech_stack TEXT NOT NULL,
+    features_json TEXT NOT NULL,
+    academic_level TEXT NOT NULL,
+    generated_content_json TEXT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  );
+
+  CREATE INDEX IF NOT EXISTS idx_fingerprint ON report_cache(fingerprint);
+  CREATE INDEX IF NOT EXISTS idx_cache_title ON report_cache(project_title);
 `);
 
 export default db;
