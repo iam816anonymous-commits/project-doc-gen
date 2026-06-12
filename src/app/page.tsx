@@ -1,11 +1,19 @@
 import Link from 'next/link';
 
 export default function Home() {
+  const samples = [
+    { title: "Hospital Management", id: "f81d9ddf-ffd8-4fbc-8163-90c3af16dc9d" },
+    { title: "AI Resume Analyzer", id: "74deee66-1701-4c54-bdcb-592f128ef81a" },
+    { title: "E-Commerce Website", id: "8cce1396-d78c-49a7-979b-4e2f7e30e3fd" },
+    { title: "Student Management", id: "c056c5da-dd0e-4e83-a762-997e637bd449" }
+  ];
+
   return (
     <div className="flex flex-col min-h-screen font-sans">
       <header className="bg-white border-b px-6 py-4 flex justify-between items-center sticky top-0 z-50">
         <div className="text-2xl font-bold text-blue-600">Jules</div>
-        <nav>
+        <nav className="flex items-center space-x-6">
+          <Link href="#samples" className="text-gray-600 hover:text-blue-600 font-medium">View Samples</Link>
           <Link href="/generate" className="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition">
             Generate Now
           </Link>
@@ -21,82 +29,91 @@ export default function Home() {
           <p className="text-xl text-gray-600 mb-10 max-w-2xl mx-auto">
             Get your complete BTech, MCA, or BCA project documentation package in just 2 minutes. ₹99 only.
           </p>
-          <Link href="/generate" className="bg-blue-600 text-white px-10 py-5 rounded-2xl text-2xl font-bold hover:bg-blue-700 transition shadow-xl inline-block">
-            Generate My Package
-          </Link>
-          <p className="mt-4 text-sm text-gray-500 italic">No credit card required to start previewing.</p>
-        </section>
-
-        {/* What You Get */}
-        <section className="py-20 px-6 max-w-6xl mx-auto">
-          <h2 className="text-3xl font-bold text-center mb-16 text-gray-900">Everything you need for submission</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              { title: 'Project Synopsis', desc: '100% approval-ready synopsis with abstract and objectives.' },
-              { title: 'Full SRS & Report', desc: 'Detailed 17-section documentation covering Methodology to Testing.' },
-              { title: 'Viva & PPT', desc: 'Over 50+ potential viva questions and a complete PPT structure.' },
-              { title: 'DOCX & PDF', desc: 'Download in standard academic formats ready to print.' },
-              { title: 'Tech Stack Specific', desc: 'Content tailored to your React, Python, Java or any other stack.' },
-              { title: 'Instant Delivery', desc: 'Unlock your package immediately after simple UPI payment.' }
-            ].map((f, i) => (
-              <div key={i} className="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition">
-                <div className="w-12 h-12 bg-blue-100 rounded-lg mb-4 flex items-center justify-center text-blue-600 text-xl font-bold">✓</div>
-                <h3 className="text-xl font-bold mb-2">{f.title}</h3>
-                <p className="text-gray-600">{f.desc}</p>
-              </div>
-            ))}
+          <div className="flex flex-col items-center gap-4">
+             <Link href="/generate" className="bg-blue-600 text-white px-10 py-5 rounded-2xl text-2xl font-bold hover:bg-blue-700 transition shadow-xl inline-block">
+               Generate My Package
+             </Link>
+             <p className="text-sm text-gray-500 italic">No credit card required to start previewing.</p>
           </div>
         </section>
 
-        {/* Sample Preview Section */}
-        <section className="bg-blue-600 py-20 px-6 text-white text-center">
-          <h2 className="text-3xl font-bold mb-8">See it in action</h2>
-          <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-2xl p-4 overflow-hidden">
-             <div className="bg-gray-100 p-8 rounded-xl text-left">
-                <div className="h-4 w-1/4 bg-blue-200 rounded mb-4"></div>
-                <div className="h-8 w-3/4 bg-gray-200 rounded mb-8"></div>
-                <div className="space-y-4">
-                  <div className="h-4 w-full bg-gray-100 rounded"></div>
-                  <div className="h-4 w-full bg-gray-100 rounded"></div>
-                  <div className="h-4 w-5/6 bg-gray-100 rounded"></div>
+        {/* Free Preview Value Prop */}
+        <section className="py-12 bg-blue-50 border-y border-blue-100 text-center">
+           <p className="text-blue-800 font-bold text-lg">
+             ✨ Proof of Quality: Preview your Project Abstract & Objectives for FREE before you pay.
+           </p>
+        </section>
+
+        {/* Outcomes / Real Samples */}
+        <section id="samples" className="py-20 px-6 max-w-6xl mx-auto">
+           <h2 className="text-3xl font-bold text-center mb-4 text-gray-900">Students buy outcomes, not features</h2>
+           <p className="text-center text-gray-600 mb-16 max-w-2xl mx-auto">Don&apos;t take our word for it. See the actual quality of documentation we generate for popular projects.</p>
+
+           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {samples.map((sample) => (
+                <div key={sample.id} className="group border rounded-2xl overflow-hidden hover:border-blue-500 transition shadow-sm bg-white">
+                   <div className="bg-gray-100 h-48 flex items-center justify-center font-mono text-gray-400 relative overflow-hidden">
+                      <div className="absolute inset-0 p-4 opacity-50 select-none">
+                         <div className="h-4 w-1/3 bg-gray-300 rounded mb-4"></div>
+                         <div className="h-2 w-full bg-gray-200 rounded mb-2"></div>
+                         <div className="h-2 w-full bg-gray-200 rounded mb-2"></div>
+                         <div className="h-2 w-2/3 bg-gray-200 rounded mb-4"></div>
+                         <div className="h-4 w-1/4 bg-gray-300 rounded mb-4"></div>
+                         <div className="h-2 w-full bg-gray-200 rounded mb-2"></div>
+                         <div className="h-2 w-5/6 bg-gray-200 rounded"></div>
+                      </div>
+                      <div className="z-10 bg-white/90 px-6 py-2 rounded-full border shadow-sm font-bold text-blue-600">
+                         {sample.title}
+                      </div>
+                   </div>
+                   <div className="p-6 flex justify-between items-center">
+                      <div>
+                         <h3 className="font-bold text-lg">{sample.title}</h3>
+                         <p className="text-sm text-gray-500 italic">Full 17-section report ready</p>
+                      </div>
+                      {/* Note: guest view might be restricted by user_id cookie,
+                          but for public samples we might need a special route or bypass.
+                          For now, we link to the generate flow. */}
+                      <Link href="/generate" className="text-blue-600 font-bold hover:underline">
+                         View Preview →
+                      </Link>
+                   </div>
                 </div>
-                <div className="mt-12 pt-8 border-t border-gray-200 text-center text-gray-400 font-mono text-sm">
-                   [SAMPLE GENERATED CONTENT FOR &quot;AI RESUME ANALYZER&quot;]
-                </div>
-             </div>
-          </div>
-          <p className="mt-10 text-lg opacity-90">Tailored documentation for AI, Web, Mobile, IoT, and more.</p>
+              ))}
+           </div>
         </section>
 
         {/* Pricing */}
         <section className="py-24 px-6 text-center bg-gray-50">
           <div className="max-w-md mx-auto bg-white p-12 rounded-3xl border-4 border-blue-600 shadow-2xl relative">
-            <span className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-blue-600 text-white px-4 py-1 rounded-full text-sm font-bold uppercase tracking-wider">MVP Launch Offer</span>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Full Project Package</h2>
+            <span className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-blue-600 text-white px-4 py-1 rounded-full text-sm font-bold uppercase tracking-wider">Launch Offer</span>
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Complete Package</h2>
             <div className="text-6xl font-black text-gray-900 mb-6">₹99</div>
             <ul className="text-left text-gray-600 space-y-4 mb-10">
-              <li className="flex items-center"><span className="text-green-500 mr-2">✓</span> Full DOCX Download</li>
-              <li className="flex items-center"><span className="text-green-500 mr-2">✓</span> Full PDF Download</li>
-              <li className="flex items-center"><span className="text-green-500 mr-2">✓</span> Viva Questions</li>
-              <li className="flex items-center"><span className="text-green-500 mr-2">✓</span> PPT Presentation Structure</li>
+              <li className="flex items-center"><span className="text-green-500 mr-2">✓</span> Full 17-Section Document</li>
+              <li className="flex items-center"><span className="text-green-500 mr-2">✓</span> Professional DOCX Download</li>
+              <li className="flex items-center"><span className="text-green-500 mr-2">✓</span> Print-Ready PDF Download</li>
+              <li className="flex items-center"><span className="text-green-500 mr-2">✓</span> 50+ Viva Questions & PPT Outline</li>
             </ul>
             <Link href="/generate" className="block w-full bg-blue-600 text-white py-4 rounded-xl font-bold text-xl hover:bg-blue-700 transition">
-               Get Started Now
+               Get My Report Now
             </Link>
           </div>
         </section>
 
-        {/* Testimonials Placeholder */}
+        {/* Testimonials */}
         <section className="py-20 px-6 max-w-4xl mx-auto text-center">
-           <h2 className="text-3xl font-bold mb-12">What students are saying</h2>
-           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 italic text-gray-600">
-              <div className="bg-white p-8 rounded-2xl border shadow-sm">
+           <h2 className="text-3xl font-bold mb-12 text-gray-900 font-serif">Trusted by final year students</h2>
+           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 italic text-gray-600 font-serif">
+              <div className="bg-white p-8 rounded-2xl border shadow-sm relative">
+                 <span className="absolute top-4 left-4 text-6xl text-blue-100 font-serif">“</span>
                  &quot;This saved me weeks of work! The viva questions were exactly what my examiner asked.&quot;
-                 <p className="mt-4 font-bold not-italic text-gray-900">— Rahul, BTech Final Year</p>
+                 <p className="mt-4 font-bold not-italic text-gray-900 font-sans">— Rahul, BTech Final Year</p>
               </div>
-              <div className="bg-white p-8 rounded-2xl border shadow-sm">
+              <div className="bg-white p-8 rounded-2xl border shadow-sm relative">
+                 <span className="absolute top-4 left-4 text-6xl text-blue-100 font-serif">“</span>
                  &quot;Amazing quality for just ₹99. The SRS was very professional and well-structured.&quot;
-                 <p className="mt-4 font-bold not-italic text-gray-900">— Priya, MCA Student</p>
+                 <p className="mt-4 font-bold not-italic text-gray-900 font-sans">— Priya, MCA Student</p>
               </div>
            </div>
         </section>

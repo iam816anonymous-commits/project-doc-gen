@@ -23,10 +23,42 @@ export default async function AdminPage() {
     ORDER BY s.submitted_at DESC
   `).all() as Submission[];
 
+  const stats = db.prepare(`
+    SELECT
+      (SELECT COUNT(*) FROM users) as total_users,
+      (SELECT COUNT(*) FROM projects) as total_projects,
+      (SELECT COUNT(*) FROM payment_submissions) as total_submissions,
+      (SELECT COUNT(*) FROM payment_submissions WHERE status = 'APPROVED') as approved_payments,
+      (SELECT COUNT(*) FROM projects WHERE is_paid = 1) as paid_projects
+    FROM users LIMIT 1
+  `).get() as {
+    total_users: number,
+    total_projects: number,
+    total_submissions: number,
+    approved_payments: number,
+    paid_projects: number
+  } || { total_users: 0, total_projects: 0, total_submissions: 0, approved_payments: 0, paid_projects: 0 };
+
   return (
     <div className="min-h-screen bg-gray-50 p-8">
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-3xl font-bold mb-8">Admin Dashboard</h1>
+        <h1 className="text-3xl font-bold mb-8 text-gray-900">Admin Dashboard</h1>
+
+        {/* Stats Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-12">
+           {[
+             { label: 'Total Users', val: stats.total_users },
+             { label: 'Projects Generated', val: stats.total_projects },
+             { label: 'Screenshots Uploaded', val: stats.total_submissions },
+             { label: 'Payments Approved', val: stats.approved_payments },
+             { label: 'Revenue (₹)', val: stats.approved_payments * 99 }
+           ].map((s, i) => (
+             <div key={i} className="bg-white p-6 rounded-xl border shadow-sm">
+                <p className="text-sm text-gray-500 mb-1">{s.label}</p>
+                <p className="text-2xl font-bold text-gray-900">{s.val}</p>
+             </div>
+           ))}
+        </div>
         <table className="min-w-full bg-white border">
           <thead>
             <tr>

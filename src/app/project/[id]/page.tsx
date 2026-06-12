@@ -25,7 +25,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
 
   const content = JSON.parse(project.content);
   const isPaid = project.is_paid === 1;
-  const freeSections = ["Abstract", "Objectives", "Introduction"];
+  const freeSections = ["Abstract", "Objectives"];
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
