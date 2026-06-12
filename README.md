@@ -1,36 +1,65 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Jules - AI Project Documentation Generator
 
-## Getting Started
+Jules is a micro-SaaS designed to help BTech, MCA, and BCA students generate complete academic project documentation packages in minutes.
 
-First, run the development server:
+## 🚀 Product Overview
+Stop spending weeks on manual documentation. Jules uses Gemini AI to create professional, academic-grade reports tailored to your specific project title and tech stack.
 
+## ✨ Features
+- **Instant Generation**: 17+ sections generated in under a minute.
+- **Academic Standards**: Tailored for BTech, MCA, BCA, and Diploma levels.
+- **Manual UPI Verification**: Simple ₹99 payment flow via UPI.
+- **Secure Exports**: Download reports in professional PDF and DOCX formats.
+- **Free Proof of Quality**: Preview your Abstract and Objectives for free before paying.
+
+## 🛠 Architecture
+- **Frontend**: Next.js 15 (App Router), React 19, Tailwind CSS.
+- **Backend**: Next.js API Routes.
+- **Database**: SQLite with `better-sqlite3`.
+- **AI**: Google Gemini 1.5 Flash.
+- **Persistence**: Fingerprint-based report reuse engine.
+
+## 📦 Documentation Package Includes
+1. Title Page
+2. Abstract
+3. Introduction
+4. Problem Statement
+5. Objectives
+6. Existing System
+7. Proposed System
+8. System Requirements
+9. Methodology
+10. Modules
+11. Database Design
+12. Testing Strategy
+13. Future Scope
+14. Conclusion
+15. References
+16. Viva Questions (50+)
+17. PPT Outline
+
+## 🛠 Setup & Deployment
+Refer to the [Deployment Guide](deployment-guide.md) for hosting and infrastructure details.
+
+### Environment Variables
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+GEMINI_API_KEY=your_api_key_here
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Getting Started
+```bash
+npm install
+npm run build
+npm run start
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 💳 Payment Workflow
+1. User generates project and views free preview.
+2. User clicks "Unlock Full Package".
+3. User pays ₹99 via UPI (QR provided).
+4. User uploads a screenshot of the payment.
+5. Admin approves the submission via `/admin`.
+6. Full documentation and downloads are instantly enabled for the user.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+© 2024 Jules AI

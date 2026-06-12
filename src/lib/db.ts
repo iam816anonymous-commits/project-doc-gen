@@ -54,6 +54,14 @@ db.exec(`
 
   CREATE INDEX IF NOT EXISTS idx_fingerprint ON report_cache(fingerprint);
   CREATE INDEX IF NOT EXISTS idx_cache_title ON report_cache(project_title);
+
+  CREATE TABLE IF NOT EXISTS auth_tokens (
+    id TEXT PRIMARY KEY,
+    email TEXT NOT NULL,
+    token TEXT NOT NULL,
+    expires_at DATETIME NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  );
 `);
 
 export default db;
