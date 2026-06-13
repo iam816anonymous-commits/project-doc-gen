@@ -58,12 +58,26 @@ export class ProjectProfiler {
       }
     });
 
+    // Enhanced ZIP detection
+    const allNames = entries.map(e => e.entryName.toLowerCase()).join(' ');
+    const features: string[] = [];
+    if (allNames.includes('auth') || allNames.includes('login')) features.push('Authentication');
+    if (allNames.includes('api') || allNames.includes('routes')) features.push('REST API');
+    if (allNames.includes('db') || allNames.includes('models')) features.push('Database Management');
+    if (allNames.includes('admin') || allNames.includes('dashboard')) features.push('Admin Dashboard');
+
+    let database = 'SQL';
+    if (allNames.includes('mongo')) database = 'MongoDB';
+    if (allNames.includes('firebase')) database = 'Firebase';
+
     return {
-      title: originalName.replace('.zip', ''),
+      title: originalName.replace('.zip', '').replace(/-/g, ' ').replace(/_/g, ' '),
       techStack: Array.from(techStack),
-      features: ['Automated Content Processing', 'Data Management'], // Inferred
-      modules: Array.from(modules).slice(0, 5),
-      architecture: 'Inferred Modular Architecture'
+      features: features.length > 0 ? features : ['User Authentication', 'Data Persistence', 'Responsive UI'],
+      modules: Array.from(modules).filter(m => !['node_modules', 'dist', 'build', '.git', '__pycache__', 'env', 'venv'].includes(m)).slice(0, 5),
+      database,
+      architecture: allNames.includes('client') && allNames.includes('server') ? 'Client-Server (MERN/PERN)' :
+                    allNames.includes('microservice') ? 'Microservices Architecture' : 'Modular Monolithic Architecture'
     };
   }
 
@@ -71,17 +85,18 @@ export class ProjectProfiler {
     const data = await pdf(buffer);
     const text = data.text;
 
-    // Basic extraction logic
-    const titleMatch = text.match(/Title:\s*(.*)/i) || text.match(/Project Report On\s*(.*)/i);
-    const objectivesMatch = text.match(/Objectives:\s*([\s\S]*?)(?=\n\n|\n[A-Z])/i);
+    const titleMatch = text.match(/Title:\s*(.*)/i) || text.match(/Project Report On\s*(.*)/i) || text.match(/Name of the Project:\s*(.*)/i);
+    const techMatch = text.match(/Technologies:\s*(.*)/i) || text.match(/Tech Stack:\s*(.*)/i) || text.match(/Software Requirements:\s*(.*)/i);
+    const featuresMatch = text.match(/Features:\s*([\s\S]*?)(?=\n\n|\n[A-Z])/i);
+    const architectureMatch = text.match(/Architecture:\s*(.*)/i);
 
     return {
       title: titleMatch ? titleMatch[1].trim() : 'Extracted Project',
-      techStack: ['Detected from PDF content'],
-      features: ['Content extracted from PDF'],
-      modules: ['Core System'],
-      problemStatement: 'Extracted from uploaded report',
-      objectives: objectivesMatch ? objectivesMatch[1].split('\n').filter(l => l.trim()) : []
+      techStack: techMatch ? techMatch[1].split(',').map(t => t.trim()) : ['Detected from PDF content'],
+      features: featuresMatch ? featuresMatch[1].split('\n').filter(l => l.trim()).slice(0, 5) : ['Content extraction', 'PDF parsing'],
+      modules: ['Core System', 'Data Module'],
+      architecture: architectureMatch ? architectureMatch[1].trim() : 'Standard Academic Architecture',
+      problemStatement: 'Extracted from uploaded report'
     };
   }
 
@@ -89,11 +104,14 @@ export class ProjectProfiler {
     const result = await mammoth.extractRawText({ buffer });
     const text = result.value;
 
+    const titleMatch = text.match(/Title:\s*(.*)/i) || text.match(/Project Report On\s*(.*)/i);
+    const techMatch = text.match(/Tech Stack:\s*(.*)/i) || text.match(/Technologies:\s*(.*)/i);
+
     return {
-      title: 'Extracted from DOCX',
-      techStack: ['Detected from DOCX content'],
-      features: ['Parsed from document'],
-      modules: ['General Module'],
+      title: titleMatch ? titleMatch[1].trim() : 'Extracted from DOCX',
+      techStack: techMatch ? techMatch[1].split(',').map(t => t.trim()) : ['Detected from DOCX content'],
+      features: ['Parsed from document content'],
+      modules: ['Core Logic'],
       methodology: 'Analysis of provided documentation'
     };
   }

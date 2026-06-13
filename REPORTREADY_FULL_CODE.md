@@ -254,9 +254,15 @@ FILE: src/app/api/analyze/route.ts
 import { NextResponse } from 'next/server';
 import { ProjectProfiler } from '@/lib/project-profiler';
 import mime from 'mime-types';
+import { cookies } from 'next/headers';
 
 export async function POST(request: Request) {
   try {
+    const userId = (await cookies()).get('user_id')?.value;
+    if (!userId) {
+       return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
+    }
+
     const formData = await request.formData();
     const file = formData.get('file') as File;
     const type = formData.get('type') as string;
@@ -266,27 +272,21 @@ export async function POST(request: Request) {
     }
 
     const buffer = Buffer.from(await file.arrayBuffer());
-
-    // MIME Detection
     const detectedMime = mime.lookup(file.name);
-    if (!detectedMime) {
-       return NextResponse.json({ error: 'Unsupported file type' }, { status: 400 });
-    }
 
-    // Basic malicious check (size and simple string match for common patterns)
     if (file.size > 10 * 1024 * 1024) {
       return NextResponse.json({ error: 'File too large (max 10MB)' }, { status: 400 });
     }
 
     let profile;
-    if (type === 'zip' && detectedMime === 'application/zip') {
+    if (type === 'zip') {
       profile = await ProjectProfiler.fromZip(buffer, file.name);
-    } else if (type === 'pdf' && detectedMime === 'application/pdf') {
+    } else if (type === 'pdf') {
       profile = await ProjectProfiler.fromPDF(buffer);
-    } else if (type === 'docx' && (detectedMime === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document')) {
+    } else if (type === 'docx') {
       profile = await ProjectProfiler.fromDocx(buffer);
     } else {
-      return NextResponse.json({ error: 'Mismatched file type and extension' }, { status: 400 });
+      return NextResponse.json({ error: 'Unsupported analysis type' }, { status: 400 });
     }
 
     return NextResponse.json({ profile });
@@ -2167,9 +2167,9 @@ FILE: src/app/generate/page.tsx
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import OTPLogin from '@/components/OTPLogin';
-import { Loader2, Upload, CheckCircle2 } from 'lucide-react';
+import { Loader2, Upload, CheckCircle2, ChevronRight, GraduationCap, Building2, User } from 'lucide-react';
 
 export default function GenerationPage() {
   const searchParams = useSearchParams();
@@ -2181,14 +2181,14 @@ export default function GenerationPage() {
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(false);
 
-  // Minimal inputs
+  // MANDATORY MANUAL FIELDS (Post-Analysis)
+  const [studentName, setStudentName] = useState('');
   const [university, setUniversity] = useState('');
   const [level, setLevel] = useState('BTech');
 
   useEffect(() => {
-    // Check for existing session
     const checkSession = async () => {
-      const res = await fetch('/api/auth/me'); // Simple endpoint to check cookie
+      const res = await fetch('/api/auth/me');
       if (res.ok) {
         const data = await res.json();
         setUserId(data.userId);
@@ -2234,7 +2234,7 @@ export default function GenerationPage() {
     setLoading(true);
     setStep('analyze');
     try {
-      const res = await fetch('/api/analyze/github', { // I'll need to create this or use existing repo-analyzer
+      const res = await fetch('/api/analyze/github', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ url })
@@ -2243,6 +2243,9 @@ export default function GenerationPage() {
       if (res.ok) {
         setProfile(data.profile);
         setStep('confirm');
+      } else {
+        alert(data.error || 'GitHub analysis failed');
+        setStep('input');
       }
     } catch (err) {
       alert('GitHub analysis failed');
@@ -2253,6 +2256,11 @@ export default function GenerationPage() {
   };
 
   const handleGenerate = async () => {
+    if (!studentName || !university) {
+      alert('Please fill Student Name and University');
+      return;
+    }
+
     setLoading(true);
     try {
       const res = await fetch('/api/generate', {
@@ -2265,6 +2273,7 @@ export default function GenerationPage() {
           features: profile.features.join(', '),
           problemStatement: profile.problemStatement || 'Automated generation',
           teamSize: 1,
+          studentName,
           academicLevel: level,
           university,
           profile
@@ -2292,51 +2301,72 @@ export default function GenerationPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 py-20 px-6">
+    <div className="min-h-screen bg-slate-50 py-12 md:py-20 px-4 md:px-6">
       <div className="max-w-3xl mx-auto">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-black text-slate-900 mb-2">
-            {step === 'input' ? 'Provide Your Project' :
+          <h1 className="text-3xl md:text-4xl font-black text-slate-900 mb-2">
+            {step === 'input' ? (sourceType === 'manual' ? 'Describe Your Project' : 'Upload Your Project') :
              step === 'analyze' ? 'Analyzing Source...' :
-             'Confirm Details'}
+             'Verify Project Intelligence'}
           </h1>
-          <p className="text-slate-500 font-medium">Step {step === 'input' ? '1' : step === 'analyze' ? '2' : '3'} of 3</p>
+          <p className="text-slate-500 font-medium">
+             {step === 'input' ? 'Select your source file or link' :
+              step === 'analyze' ? 'Identifying tech stack and features...' :
+              'Our AI identified these details. Please confirm.'}
+          </p>
         </div>
 
         {step === 'input' && (
-          <div className="bg-white p-12 rounded-[2.5rem] border shadow-sm text-center">
+          <div className="bg-white p-8 md:p-12 rounded-[2.5rem] border shadow-sm text-center">
             {sourceType === 'github' ? (
               <div className="space-y-6">
-                <input
-                  type="text"
-                  placeholder="https://github.com/user/repo"
-                  className="w-full px-6 py-4 rounded-xl border font-medium focus:ring-2 focus:ring-blue-500 outline-none"
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') handleGitHubAnalysis(e.currentTarget.value);
+                <div className="bg-slate-900 p-8 rounded-3xl text-white shadow-xl">
+                    <label className="block text-xs font-black uppercase tracking-widest mb-4 opacity-70">GitHub Repository URL</label>
+                    <input
+                      type="text"
+                      placeholder="https://github.com/user/repo"
+                      className="w-full px-6 py-4 bg-white/10 border border-white/20 rounded-xl text-white placeholder:text-white/30 font-medium focus:bg-white/20 outline-none transition-all"
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') handleGitHubAnalysis(e.currentTarget.value);
+                      }}
+                    />
+                    <p className="text-xs text-white/50 mt-4">We will analyze your code to extract modules and tech stack.</p>
+                </div>
+                <button
+                  onClick={(e) => {
+                    const input = (e.currentTarget.previousElementSibling as HTMLDivElement).querySelector('input');
+                    if (input) handleGitHubAnalysis(input.value);
                   }}
-                />
-                <p className="text-sm text-slate-400">Paste your public repository URL and press Enter</p>
+                  className="w-full bg-blue-600 text-white py-4 rounded-xl font-black shadow-lg shadow-blue-100 hover:bg-blue-700 transition"
+                >
+                    Start Analysis
+                </button>
               </div>
             ) : sourceType === 'manual' ? (
               <div className="space-y-6 text-left">
-                <input
-                  type="text"
-                  placeholder="Project Title"
-                  className="w-full px-6 py-4 rounded-xl border font-medium outline-none"
-                  onChange={(e) => setProfile({ ...profile, title: e.target.value, techStack: [], features: [], modules: [] })}
-                />
+                <div className="space-y-4">
+                    <label className="text-xs font-black uppercase tracking-widest text-slate-400">Project Title</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. AI Based Resume Screener"
+                      className="w-full px-6 py-4 rounded-xl border-2 border-slate-100 font-bold focus:border-blue-600 outline-none transition-all"
+                      onChange={(e) => setProfile({ ...profile, title: e.target.value, techStack: [], features: [], modules: [] })}
+                    />
+                </div>
                 <button
                    onClick={() => setStep('confirm')}
-                   className="w-full bg-blue-600 text-white py-4 rounded-xl font-black"
+                   className="w-full bg-blue-600 text-white py-5 rounded-2xl font-black text-xl shadow-xl shadow-blue-100 hover:bg-blue-700 transition flex items-center justify-center gap-2"
                 >
-                   Continue →
+                   Continue <ChevronRight className="w-6 h-6" />
                 </button>
               </div>
             ) : (
-              <label className="flex flex-col items-center justify-center border-4 border-dashed border-slate-100 rounded-[2rem] p-20 cursor-pointer hover:bg-slate-50 transition group">
-                <Upload className="w-16 h-16 text-slate-300 group-hover:text-blue-600 mb-6 transition-colors" />
-                <span className="text-xl font-black text-slate-900 mb-2">Click to Upload {sourceType.toUpperCase()}</span>
-                <span className="text-slate-400 font-medium text-sm">Max file size 10MB</span>
+              <label className="flex flex-col items-center justify-center border-4 border-dashed border-slate-100 rounded-[2.5rem] p-12 md:p-20 cursor-pointer hover:bg-slate-50 transition group">
+                <div className="w-20 h-20 bg-blue-50 text-blue-600 rounded-3xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <Upload className="w-10 h-10" />
+                </div>
+                <span className="text-2xl font-black text-slate-900 mb-2">Upload {sourceType.toUpperCase()}</span>
+                <span className="text-slate-400 font-medium">Max file size 10MB</span>
                 <input type="file" className="hidden" onChange={handleFileUpload} accept={sourceType === 'zip' ? '.zip' : sourceType === 'pdf' ? '.pdf' : '.docx'} />
               </label>
             )}
@@ -2345,74 +2375,105 @@ export default function GenerationPage() {
 
         {step === 'analyze' && (
           <div className="bg-white p-12 rounded-[2.5rem] border shadow-sm flex flex-col items-center justify-center min-h-[400px]">
-             <Loader2 className="w-12 h-12 text-blue-600 animate-spin mb-6" />
-             <p className="text-xl font-black text-slate-900 mb-2">Analyzing Project Content</p>
-             <p className="text-slate-500 text-center max-w-sm">We're extracting tech stack, modules, and architecture from your {sourceType}.</p>
+             <div className="relative mb-8">
+                <div className="w-24 h-24 border-4 border-slate-100 border-t-blue-600 rounded-full animate-spin"></div>
+                <div className="absolute inset-0 flex items-center justify-center font-black text-blue-600">AI</div>
+             </div>
+             <p className="text-2xl font-black text-slate-900 mb-2">Analyzing Project Content</p>
+             <p className="text-slate-500 text-center max-w-sm font-medium">We&apos;re extracting tech stack, modules, and architecture from your source files.</p>
           </div>
         )}
 
         {step === 'confirm' && profile && (
-          <div className="space-y-6">
-            <div className="bg-white p-10 rounded-[2.5rem] border shadow-sm">
-              <h3 className="text-xl font-black text-slate-900 mb-6 flex items-center gap-2">
-                <CheckCircle2 className="text-green-500 w-6 h-6" /> Analysis Successful
-              </h3>
+          <div className="space-y-8">
+            <div className="bg-white p-8 md:p-10 rounded-[2.5rem] border shadow-sm relative overflow-hidden">
+              <div className="absolute top-0 right-0 p-8 opacity-10">
+                 <CheckCircle2 className="w-32 h-32 text-green-500" />
+              </div>
+              <h3 className="text-xl font-black text-slate-900 mb-8 border-b pb-6">Project Intelligence Summary</h3>
 
-              <div className="space-y-6">
-                <div>
-                  <label className="text-xs font-black text-slate-400 uppercase tracking-widest mb-2 block">Project Title</label>
+              <div className="space-y-8 relative z-10">
+                <div className="space-y-3">
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] block">Project Title</label>
                   <input
                     type="text"
                     value={profile.title}
                     onChange={(e) => setProfile({...profile, title: e.target.value})}
-                    className="w-full px-6 py-4 bg-slate-50 rounded-xl border font-bold text-slate-900"
+                    className="w-full px-6 py-4 bg-slate-50 rounded-xl border-2 border-transparent focus:border-blue-600 focus:bg-white font-bold text-slate-900 outline-none transition-all"
                   />
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-xs font-black text-slate-400 uppercase tracking-widest mb-2 block">Detected Tech</label>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="space-y-3">
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] block">Detected Tech Stack</label>
                     <div className="flex flex-wrap gap-2">
-                      {profile.techStack?.map((t: string) => <span key={t} className="bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-xs font-bold">{t}</span>)}
-                      {profile.techStack?.length === 0 && <span className="text-slate-400 text-xs">None detected</span>}
+                      {profile.techStack?.map((t: string) => <span key={t} className="bg-blue-50 text-blue-700 px-3 py-1 rounded-lg text-xs font-black">{t}</span>)}
+                      {profile.techStack?.length === 0 && <span className="text-slate-400 text-xs font-bold italic">No tech detected. Click to add.</span>}
                     </div>
                   </div>
-                  <div>
-                    <label className="text-xs font-black text-slate-400 uppercase tracking-widest mb-2 block">Modules</label>
+                  <div className="space-y-3">
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] block">Modules & Features</label>
                     <div className="flex flex-wrap gap-2">
-                      {profile.modules?.map((m: string) => <span key={m} className="bg-slate-100 text-slate-700 px-3 py-1 rounded-full text-xs font-bold">{m}</span>)}
+                      {profile.features?.map((f: string) => <span key={f} className="bg-green-50 text-green-700 px-3 py-1 rounded-lg text-xs font-black">{f}</span>)}
                     </div>
                   </div>
+                </div>
+
+                <div className="p-6 bg-slate-900 rounded-3xl text-white">
+                    <div className="flex justify-between items-center mb-4">
+                        <span className="text-[10px] font-black uppercase tracking-widest opacity-50">Inferred Architecture</span>
+                        <span className="bg-blue-600 text-[10px] font-black px-2 py-1 rounded uppercase">AI Match</span>
+                    </div>
+                    <p className="text-lg font-bold">{profile.architecture || 'Modular Architecture'}</p>
                 </div>
               </div>
             </div>
 
-            <div className="bg-blue-600 p-10 rounded-[2.5rem] text-white">
-              <h3 className="text-xl font-black mb-6 italic">Almost Done! Just 2 more details:</h3>
-              <div className="space-y-6">
-                 <div>
-                    <label className="text-xs font-black text-blue-200 uppercase tracking-widest mb-2 block">Your University</label>
-                    <input
-                      type="text"
-                      placeholder="e.g. JNTU Hyderabad"
-                      className="w-full px-6 py-4 bg-white/10 rounded-xl border border-white/20 font-bold text-white placeholder:text-white/40 outline-none focus:bg-white/20 transition"
-                      value={university}
-                      onChange={(e) => setUniversity(e.target.value)}
-                    />
+            <div className="bg-blue-600 p-8 md:p-12 rounded-[3rem] text-white shadow-2xl shadow-blue-200">
+              <h3 className="text-2xl font-black mb-8 flex items-center gap-3">
+                <span className="bg-white/20 p-2 rounded-xl"><GraduationCap className="w-6 h-6" /></span>
+                Final Submission Details
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                 <div className="space-y-3">
+                    <label className="text-[10px] font-black text-blue-200 uppercase tracking-[0.2em] block">Student Name</label>
+                    <div className="relative">
+                        <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-blue-300" />
+                        <input
+                        type="text"
+                        placeholder="Your Full Name"
+                        className="w-full pl-12 pr-6 py-4 bg-white/10 rounded-xl border border-white/20 font-bold text-white placeholder:text-white/40 outline-none focus:bg-white/20 transition"
+                        value={studentName}
+                        onChange={(e) => setStudentName(e.target.value)}
+                        />
+                    </div>
                  </div>
-                 <div>
-                    <label className="text-xs font-black text-blue-200 uppercase tracking-widest mb-2 block">Academic Level</label>
-                    <select
-                      className="w-full px-6 py-4 bg-white/10 rounded-xl border border-white/20 font-bold text-white outline-none focus:bg-white/20 transition"
-                      value={level}
-                      onChange={(e) => setLevel(e.target.value)}
-                    >
-                      <option value="BTech">B.Tech / B.E.</option>
-                      <option value="MCA">MCA</option>
-                      <option value="BCA">BCA</option>
-                      <option value="Diploma">Diploma</option>
-                      <option value="MTech">M.Tech</option>
-                    </select>
+                 <div className="space-y-3">
+                    <label className="text-[10px] font-black text-blue-200 uppercase tracking-[0.2em] block">Your University</label>
+                    <div className="relative">
+                        <Building2 className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-blue-300" />
+                        <input
+                        type="text"
+                        placeholder="e.g. JNTU Hyderabad"
+                        className="w-full pl-12 pr-6 py-4 bg-white/10 rounded-xl border border-white/20 font-bold text-white placeholder:text-white/40 outline-none focus:bg-white/20 transition"
+                        value={university}
+                        onChange={(e) => setUniversity(e.target.value)}
+                        />
+                    </div>
+                 </div>
+                 <div className="md:col-span-2 space-y-3">
+                    <label className="text-[10px] font-black text-blue-200 uppercase tracking-[0.2em] block">Academic Level</label>
+                    <div className="grid grid-cols-3 md:grid-cols-5 gap-3">
+                        {['Diploma', 'BCA', 'MCA', 'BTech', 'MTech'].map((l) => (
+                            <button
+                                key={l}
+                                onClick={() => setLevel(l)}
+                                className={`py-3 rounded-xl font-black text-xs border transition-all ${level === l ? 'bg-white text-blue-600 border-white' : 'bg-white/5 text-white border-white/10 hover:bg-white/10'}`}
+                            >
+                                {l}
+                            </button>
+                        ))}
+                    </div>
                  </div>
               </div>
             </div>
@@ -2420,10 +2481,16 @@ export default function GenerationPage() {
             <button
               onClick={handleGenerate}
               disabled={loading}
-              className="w-full bg-slate-900 text-white py-6 rounded-3xl font-black text-xl flex items-center justify-center gap-3 hover:bg-black transition shadow-2xl"
+              className="w-full bg-slate-900 text-white py-6 md:py-8 rounded-[2.5rem] font-black text-xl md:text-2xl flex items-center justify-center gap-4 hover:bg-black transition shadow-2xl shadow-slate-200"
             >
-              {loading ? <Loader2 className="animate-spin" /> : 'Generate Complete Package →'}
+              {loading ? <Loader2 className="animate-spin w-8 h-8" /> : (
+                <>
+                    Generate My Full Project Kit
+                    <ChevronRight className="w-8 h-8" />
+                </>
+              )}
             </button>
+            <p className="text-center text-slate-400 text-xs font-bold uppercase tracking-widest">Instant DOCX + PDF • Viva Preparation • PPT Outline</p>
           </div>
         )}
       </div>
@@ -3137,12 +3204,26 @@ export class ProjectProfiler {
       }
     });
 
+    // Enhanced ZIP detection
+    const allNames = entries.map(e => e.entryName.toLowerCase()).join(' ');
+    const features: string[] = [];
+    if (allNames.includes('auth') || allNames.includes('login')) features.push('Authentication');
+    if (allNames.includes('api') || allNames.includes('routes')) features.push('REST API');
+    if (allNames.includes('db') || allNames.includes('models')) features.push('Database Management');
+    if (allNames.includes('admin') || allNames.includes('dashboard')) features.push('Admin Dashboard');
+
+    let database = 'SQL';
+    if (allNames.includes('mongo')) database = 'MongoDB';
+    if (allNames.includes('firebase')) database = 'Firebase';
+
     return {
-      title: originalName.replace('.zip', ''),
+      title: originalName.replace('.zip', '').replace(/-/g, ' ').replace(/_/g, ' '),
       techStack: Array.from(techStack),
-      features: ['Automated Content Processing', 'Data Management'], // Inferred
-      modules: Array.from(modules).slice(0, 5),
-      architecture: 'Inferred Modular Architecture'
+      features: features.length > 0 ? features : ['User Authentication', 'Data Persistence', 'Responsive UI'],
+      modules: Array.from(modules).filter(m => !['node_modules', 'dist', 'build', '.git', '__pycache__', 'env', 'venv'].includes(m)).slice(0, 5),
+      database,
+      architecture: allNames.includes('client') && allNames.includes('server') ? 'Client-Server (MERN/PERN)' :
+                    allNames.includes('microservice') ? 'Microservices Architecture' : 'Modular Monolithic Architecture'
     };
   }
 
@@ -3150,17 +3231,18 @@ export class ProjectProfiler {
     const data = await pdf(buffer);
     const text = data.text;
 
-    // Basic extraction logic
-    const titleMatch = text.match(/Title:\s*(.*)/i) || text.match(/Project Report On\s*(.*)/i);
-    const objectivesMatch = text.match(/Objectives:\s*([\s\S]*?)(?=\n\n|\n[A-Z])/i);
+    const titleMatch = text.match(/Title:\s*(.*)/i) || text.match(/Project Report On\s*(.*)/i) || text.match(/Name of the Project:\s*(.*)/i);
+    const techMatch = text.match(/Technologies:\s*(.*)/i) || text.match(/Tech Stack:\s*(.*)/i) || text.match(/Software Requirements:\s*(.*)/i);
+    const featuresMatch = text.match(/Features:\s*([\s\S]*?)(?=\n\n|\n[A-Z])/i);
+    const architectureMatch = text.match(/Architecture:\s*(.*)/i);
 
     return {
       title: titleMatch ? titleMatch[1].trim() : 'Extracted Project',
-      techStack: ['Detected from PDF content'],
-      features: ['Content extracted from PDF'],
-      modules: ['Core System'],
-      problemStatement: 'Extracted from uploaded report',
-      objectives: objectivesMatch ? objectivesMatch[1].split('\n').filter(l => l.trim()) : []
+      techStack: techMatch ? techMatch[1].split(',').map(t => t.trim()) : ['Detected from PDF content'],
+      features: featuresMatch ? featuresMatch[1].split('\n').filter(l => l.trim()).slice(0, 5) : ['Content extraction', 'PDF parsing'],
+      modules: ['Core System', 'Data Module'],
+      architecture: architectureMatch ? architectureMatch[1].trim() : 'Standard Academic Architecture',
+      problemStatement: 'Extracted from uploaded report'
     };
   }
 
@@ -3168,11 +3250,14 @@ export class ProjectProfiler {
     const result = await mammoth.extractRawText({ buffer });
     const text = result.value;
 
+    const titleMatch = text.match(/Title:\s*(.*)/i) || text.match(/Project Report On\s*(.*)/i);
+    const techMatch = text.match(/Tech Stack:\s*(.*)/i) || text.match(/Technologies:\s*(.*)/i);
+
     return {
-      title: 'Extracted from DOCX',
-      techStack: ['Detected from DOCX content'],
-      features: ['Parsed from document'],
-      modules: ['General Module'],
+      title: titleMatch ? titleMatch[1].trim() : 'Extracted from DOCX',
+      techStack: techMatch ? techMatch[1].split(',').map(t => t.trim()) : ['Detected from DOCX content'],
+      features: ['Parsed from document content'],
+      modules: ['Core Logic'],
       methodology: 'Analysis of provided documentation'
     };
   }

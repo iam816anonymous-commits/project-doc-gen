@@ -1,9 +1,15 @@
 import { NextResponse } from 'next/server';
 import { ProjectProfiler } from '@/lib/project-profiler';
 import mime from 'mime-types';
+import { cookies } from 'next/headers';
 
 export async function POST(request: Request) {
   try {
+    const userId = (await cookies()).get('user_id')?.value;
+    if (!userId) {
+       return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
+    }
+
     const formData = await request.formData();
     const file = formData.get('file') as File;
     const type = formData.get('type') as string;
@@ -13,27 +19,21 @@ export async function POST(request: Request) {
     }
 
     const buffer = Buffer.from(await file.arrayBuffer());
-
-    // MIME Detection
     const detectedMime = mime.lookup(file.name);
-    if (!detectedMime) {
-       return NextResponse.json({ error: 'Unsupported file type' }, { status: 400 });
-    }
 
-    // Basic malicious check (size and simple string match for common patterns)
     if (file.size > 10 * 1024 * 1024) {
       return NextResponse.json({ error: 'File too large (max 10MB)' }, { status: 400 });
     }
 
     let profile;
-    if (type === 'zip' && detectedMime === 'application/zip') {
+    if (type === 'zip') {
       profile = await ProjectProfiler.fromZip(buffer, file.name);
-    } else if (type === 'pdf' && detectedMime === 'application/pdf') {
+    } else if (type === 'pdf') {
       profile = await ProjectProfiler.fromPDF(buffer);
-    } else if (type === 'docx' && (detectedMime === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document')) {
+    } else if (type === 'docx') {
       profile = await ProjectProfiler.fromDocx(buffer);
     } else {
-      return NextResponse.json({ error: 'Mismatched file type and extension' }, { status: 400 });
+      return NextResponse.json({ error: 'Unsupported analysis type' }, { status: 400 });
     }
 
     return NextResponse.json({ profile });

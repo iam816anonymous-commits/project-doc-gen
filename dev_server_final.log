@@ -120,3 +120,97 @@
  ✓ Compiled in 159ms (522 modules)
 <w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, rename '/app/.next/cache/webpack/client-development/1.pack.gz_' -> '/app/.next/cache/webpack/client-development/1.pack.gz'
  ✓ Compiled in 392ms (522 modules)
+ ✓ Compiled in 5.2s (522 modules)
+ ✓ Compiled in 1588ms (575 modules)
+ ✓ Compiled in 567ms (522 modules)
+ ✓ Compiled in 414ms (522 modules)
+ ○ Compiling / ...
+ ✓ Compiled / in 799ms (370 modules)
+ ⨯ [Error: Invariant: missing bootstrap script. This is a bug in Next.js] {
+  page: '/'
+}
+ ✓ Compiled /_error in 351ms (880 modules)
+ GET / 500 in 2674ms
+ GET / 200 in 262ms
+ GET / 200 in 104ms
+ ✓ Compiled /_not-found in 325ms (884 modules)
+ GET /_next/static/css/app/layout.css?v=1781361537312 404 in 416ms
+ GET /_next/static/media/22a5144ee8d83bca-s.p.woff2 404 in 440ms
+ GET /_next/static/media/7d4881bb7e1bf84d-s.p.woff2 404 in 437ms
+ GET /_next/static/chunks/app/page.js 404 in 414ms
+ GET /_next/static/chunks/app-pages-internals.js 404 in 428ms
+ GET /_next/static/chunks/main-app.js?v=1781361537312 404 in 431ms
+ ○ Compiling /generate ...
+ ✓ Compiled /generate in 902ms (388 modules)
+ GET /generate?type=manual 200 in 1355ms
+ GET /_next/static/css/app/layout.css?v=1781361539045 404 in 69ms
+ GET /_next/static/media/22a5144ee8d83bca-s.p.woff2 404 in 139ms
+ GET /_next/static/media/7d4881bb7e1bf84d-s.p.woff2 404 in 138ms
+ GET /_next/static/chunks/app-pages-internals.js 404 in 88ms
+ GET /_next/static/chunks/main-app.js?v=1781361539045 404 in 102ms
+ GET /_next/static/chunks/app/generate/page.js 404 in 44ms
+ GET /_next/static/chunks/app/page.js 404 in 55ms
+ GET /generate?type=manual 200 in 34ms
+ GET /_next/static/css/app/layout.css?v=1781361539345 404 in 48ms
+ GET /_next/static/media/7d4881bb7e1bf84d-s.p.woff2 404 in 121ms
+ GET /_next/static/media/22a5144ee8d83bca-s.p.woff2 404 in 120ms
+ GET /_next/static/chunks/app-pages-internals.js 404 in 116ms
+ GET /_next/static/chunks/main-app.js?v=1781361539345 404 in 118ms
+ GET /_next/static/chunks/app/page.js 404 in 56ms
+ GET /_next/static/chunks/app/generate/page.js 404 in 54ms
+ GET / 200 in 82ms
+ GET /_next/static/css/app/layout.css?v=1781361668017 404 in 89ms
+ GET /_next/static/media/22a5144ee8d83bca-s.p.woff2 404 in 156ms
+ GET /_next/static/chunks/main-app.js?v=1781361668017 404 in 159ms
+ GET /_next/static/media/7d4881bb7e1bf84d-s.p.woff2 404 in 170ms
+ GET /_next/static/chunks/app-pages-internals.js 404 in 159ms
+ GET /_next/static/chunks/app/page.js 404 in 81ms
+ GET /generate?type=manual 200 in 45ms
+ GET /_next/static/css/app/layout.css?v=1781361668345 404 in 53ms
+ GET /_next/static/media/22a5144ee8d83bca-s.p.woff2 404 in 135ms
+ GET /_next/static/media/7d4881bb7e1bf84d-s.p.woff2 404 in 135ms
+ GET /_next/static/chunks/app-pages-internals.js 404 in 89ms
+ GET /_next/static/chunks/main-app.js?v=1781361668345 404 in 101ms
+ GET /_next/static/chunks/app/page.js 404 in 70ms
+ GET /_next/static/chunks/app/generate/page.js 404 in 60ms
+ HEAD /generate?type=manual 200 in 77ms
+ GET /generate?type=manual 200 in 42ms
+ ✓ Compiled in 451ms (522 modules)
+ ✓ Compiled in 192ms (522 modules)
+ ✓ Compiled in 1614ms (579 modules)
+ ✓ Compiled / in 318ms (370 modules)
+ ⨯ [Error: Invariant: missing bootstrap script. This is a bug in Next.js] {
+  page: '/'
+}
+ ✓ Compiled /_error in 276ms (884 modules)
+ GET / 500 in 1587ms
+ GET / 200 in 214ms
+ GET / 200 in 113ms
+ ✓ Compiled /_not-found in 266ms (888 modules)
+ GET /_next/static/css/app/layout.css?v=1781362504612 404 in 357ms
+ GET /_next/static/media/7d4881bb7e1bf84d-s.p.woff2 404 in 379ms
+ GET /_next/static/media/22a5144ee8d83bca-s.p.woff2 404 in 385ms
+ GET /_next/static/chunks/app-pages-internals.js 404 in 361ms
+ GET /_next/static/chunks/app/page.js 404 in 362ms
+ GET /_next/static/chunks/main-app.js?v=1781362504612 404 in 376ms
+ ○ Compiling /generate ...
+ ✓ Compiled /generate in 748ms (392 modules)
+ GET /generate?type=manual 200 in 1068ms
+ GET /_next/static/css/app/layout.css?v=1781362505983 404 in 82ms
+ GET /_next/static/media/7d4881bb7e1bf84d-s.p.woff2 404 in 121ms
+ GET /_next/static/media/22a5144ee8d83bca-s.p.woff2 404 in 122ms
+ GET /_next/static/chunks/app-pages-internals.js 404 in 120ms
+ GET /_next/static/chunks/main-app.js?v=1781362505983 404 in 123ms
+ GET /_next/static/chunks/app/page.js 404 in 46ms
+ GET /_next/static/chunks/app/generate/page.js 404 in 42ms
+ GET /generate?type=manual 200 in 43ms
+ GET / 404 in 224ms
+ GET / 404 in 226ms
+ GET / 404 in 229ms
+ GET / 404 in 220ms
+ GET / 404 in 218ms
+ GET / 404 in 219ms
+ GET / 404 in 217ms
+ ✓ Compiled in 1035ms (526 modules)
+ ✓ Compiled in 345ms (526 modules)
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, rename '/app/.next/cache/webpack/client-development/3.pack.gz_' -> '/app/.next/cache/webpack/client-development/3.pack.gz'
