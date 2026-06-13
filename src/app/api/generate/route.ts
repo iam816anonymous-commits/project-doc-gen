@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import db from '@/lib/db';
 import { v4 as uuidv4 } from 'uuid';
 import { generateProjectDocumentation, generateProjectEmbedding } from '@/lib/gemini';
-import { createFingerprint } from '@/lib/similarity';
+import { createFingerprint, calculateSimilarity } from '@/lib/similarity';
 import { analyzeGitHubRepo } from '@/lib/repository-analyzer';
 import { cookies } from 'next/headers';
 
@@ -42,31 +42,50 @@ export async function POST(request: Request) {
       console.log('Cache hit for fingerprint:', fingerprint);
       content = JSON.parse(cached.generated_content_json);
     } else {
-      // 2. Similarity Check (Optional suggestion logic can go here)
+      // 2. Similarity Check
+      const similarReports = db.prepare('SELECT id, project_title, tech_stack, features_json, generated_content_json FROM report_cache ORDER BY created_at DESC LIMIT 50').all() as any[];
 
-      // 3. Gemini Generation
-      try {
-        content = await generateProjectDocumentation({
-          title: details.title,
-          category: details.projectType,
-          techStack: details.techStack,
-          features: details.features,
-          problemStatement: details.problemStatement,
-          academicLevel: details.academicLevel,
-          university: details.university,
-          repoAnalysis: repoAnalysis || undefined
-        });
+      let bestMatch = null;
+      for (const report of similarReports) {
+        const similarity = calculateSimilarity(
+          { title: details.title, techStack: details.techStack, features: details.features },
+          { title: report.project_title, techStack: report.tech_stack, features: report.features_json }
+        );
 
-        // 4. Cache the result
-        const embedding = await generateProjectEmbedding(`${details.title} ${details.projectType} ${details.techStack} ${details.features}`);
-        db.prepare(`
-          INSERT INTO report_cache (id, fingerprint, embedding, project_title, category, tech_stack, features_json, academic_level, generated_content_json, github_url, university)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        `).run(uuidv4(), fingerprint, JSON.stringify(embedding), details.title, details.projectType, details.techStack, JSON.stringify(details.features), details.academicLevel, JSON.stringify(content), details.githubUrl || null, details.university || 'Standard');
-      } catch (error) {
-        console.error('Gemini error, falling back to templates:', error);
-        // Fallback or re-throw
-        throw error;
+        if (similarity > 90) {
+          console.log(`High similarity match (${similarity.toFixed(2)}%) found with report: ${report.id}`);
+          bestMatch = JSON.parse(report.generated_content_json);
+          break;
+        }
+      }
+
+      if (bestMatch) {
+        content = bestMatch;
+      } else {
+        // 3. Gemini Generation
+        try {
+          content = await generateProjectDocumentation({
+            title: details.title,
+            category: details.projectType,
+            techStack: details.techStack,
+            features: details.features,
+            problemStatement: details.problemStatement,
+            academicLevel: details.academicLevel,
+            university: details.university,
+            repoAnalysis: repoAnalysis || undefined
+          });
+
+          // 4. Cache the result
+          const embedding = await generateProjectEmbedding(`${details.title} ${details.projectType} ${details.techStack} ${details.features}`);
+          db.prepare(`
+            INSERT INTO report_cache (id, fingerprint, embedding, project_title, category, tech_stack, features_json, academic_level, generated_content_json, github_url, university)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+          `).run(uuidv4(), fingerprint, JSON.stringify(embedding), details.title, details.projectType, details.techStack, JSON.stringify(details.features), details.academicLevel, JSON.stringify(content), details.githubUrl || null, details.university || 'Standard');
+        } catch (error) {
+          console.error('Gemini error, falling back to templates:', error);
+          // Fallback or re-throw
+          throw error;
+        }
       }
     }
 

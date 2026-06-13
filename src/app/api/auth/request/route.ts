@@ -17,10 +17,21 @@ export async function POST(request: Request) {
     db.prepare('INSERT INTO auth_tokens (id, email, token, expires_at) VALUES (?, ?, ?, ?)')
       .run(uuidv4(), email, otp, expiresAt);
 
-    // In a real app, send email here. For MVP, we log it.
-    console.log(`[AUTH] OTP for ${email}: ${otp}`);
+    // --- EMAIL INTEGRATION POINT ---
+    // In a real app, integrate an email service like Resend, SendGrid, or AWS SES here.
+    // Example: await resend.emails.send({ to: email, subject: 'Your OTP', text: `OTP: ${otp}` });
 
-    return NextResponse.json({ success: true, message: 'OTP sent to email (check console for now)' });
+    console.log(`
+      --------------------------------------------------
+      [AUTH] OTP for ${email}: ${otp}
+      (This is the MVP console delivery. Integrate SMTP here for production.)
+      --------------------------------------------------
+    `);
+
+    return NextResponse.json({
+      success: true,
+      message: 'OTP sent. For this beta version, check the server console logs to retrieve your 6-digit code.'
+    });
   } catch (error) {
     console.error('Auth request error:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });

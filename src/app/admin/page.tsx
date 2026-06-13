@@ -1,4 +1,6 @@
 import db from '@/lib/db';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 
 export const dynamic = 'force-dynamic';
 
@@ -15,6 +17,14 @@ interface Submission {
 }
 
 export default async function AdminPage() {
+  // Admin protection: Compare cookie with ADMIN_SECRET environment variable
+  const cookieStore = await cookies();
+  const adminToken = cookieStore.get('admin_token')?.value;
+
+  if (adminToken !== process.env.ADMIN_SECRET) {
+    return redirect('/');
+  }
+
   const submissions = db.prepare(`
     SELECT s.*, p.title as project_title, u.email as user_email
     FROM payment_submissions s

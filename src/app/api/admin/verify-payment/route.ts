@@ -1,9 +1,18 @@
 import { NextResponse } from 'next/server';
 import db from '@/lib/db';
 import { revalidatePath } from 'next/cache';
+import { cookies } from 'next/headers';
 
 export async function POST(request: Request) {
   try {
+    // 1. Authenticate Admin
+    const cookieStore = await cookies();
+    const adminToken = cookieStore.get('admin_token')?.value;
+
+    if (adminToken !== process.env.ADMIN_SECRET) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const formData = await request.formData();
     const submissionId = formData.get('submissionId') as string;
     const action = formData.get('action') as string;
