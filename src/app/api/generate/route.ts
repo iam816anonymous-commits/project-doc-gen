@@ -13,16 +13,20 @@ export async function POST(request: Request) {
     let userId = cookieStore.get('user_id')?.value;
 
     if (!userId) {
-      userId = uuidv4();
-      db.prepare('INSERT INTO users (id, email) VALUES (?, ?)').run(userId, `guest_${userId}@example.com`);
-      cookieStore.set('user_id', userId, { httpOnly: true });
+      return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
     }
 
-    // 1. GitHub Analysis (if URL provided)
-    let repoAnalysis = null;
-    if (details.githubUrl) {
-      repoAnalysis = await analyzeGitHubRepo(details.githubUrl);
+    // Rate limiting for generation
+    const recentGens = db.prepare('SELECT COUNT(*) as count FROM projects WHERE user_id = ? AND generated_at > datetime("now", "-1 hour")').get(userId) as { count: number };
+    if (recentGens.count >= 5) {
+      return NextResponse.json({ error: 'Generation limit reached. Please try again in an hour.' }, { status: 429 });
     }
+
+    // 1. Multi-Source Analysis
+    let sourceAnalysis = details.profile || null;
+
+    // profile is already prepared by the client using the ProjectProfiler or passed directly
+    // This allows the "Smart Confirmation" step to happen on the client.
 
     // 2. Fingerprint and Cache Lookup
     const fingerprint = createFingerprint({
@@ -47,9 +51,19 @@ export async function POST(request: Request) {
 
       let bestMatch = null;
       for (const report of similarReports) {
+        // Parse features_json if it's a JSON string, otherwise use as is
+        let reportFeatures = report.features_json;
+        try {
+          const parsed = JSON.parse(report.features_json);
+          if (typeof parsed === 'string') reportFeatures = parsed;
+          else if (Array.isArray(parsed)) reportFeatures = parsed.join(', ');
+        } catch (e) {
+          // Not JSON, use as is
+        }
+
         const similarity = calculateSimilarity(
           { title: details.title, techStack: details.techStack, features: details.features },
-          { title: report.project_title, techStack: report.tech_stack, features: report.features_json }
+          { title: report.project_title, techStack: report.tech_stack, features: reportFeatures }
         );
 
         if (similarity > 90) {
@@ -72,7 +86,7 @@ export async function POST(request: Request) {
             problemStatement: details.problemStatement,
             academicLevel: details.academicLevel,
             university: details.university,
-            repoAnalysis: repoAnalysis || undefined
+            repoAnalysis: sourceAnalysis || undefined
           });
 
           // 4. Cache the result

@@ -101,8 +101,28 @@ db.exec(`
     user_id TEXT NOT NULL,
     image_path TEXT NOT NULL,
     status TEXT DEFAULT 'PENDING', -- PENDING, APPROVED, REJECTED
+    verification_notes TEXT,
+    group_name TEXT,
+    member_count INTEGER,
+    timestamp_visible BOOLEAN,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id)
+  );
+
+  CREATE TABLE IF NOT EXISTS audit_logs (
+    id TEXT PRIMARY KEY,
+    action TEXT NOT NULL,
+    details TEXT,
+    performed_by TEXT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  );
+
+  CREATE TABLE IF NOT EXISTS otps (
+    id TEXT PRIMARY KEY,
+    email TEXT NOT NULL,
+    code TEXT NOT NULL,
+    expires_at DATETIME NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   );
 `);
 

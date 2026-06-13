@@ -30,12 +30,12 @@ export default function Home() {
                ✨ Built for Final Year Students
              </div>
              <h1 className="text-5xl md:text-7xl font-black text-slate-900 mb-8 leading-[1.1] tracking-tight">
-               Generate Complete Project Reports <br/>
-               <span className="text-blue-600 underline decoration-blue-200 underline-offset-8">From Your GitHub Repo</span>
+               Project Submission <br/>
+               <span className="text-blue-600 underline decoration-blue-200 underline-offset-8">Tomorrow?</span>
              </h1>
-             <p className="text-xl text-slate-600 mb-12 max-w-2xl mx-auto leading-relaxed">
-               Get your synopsis, documentation, viva questions, and PPT slides in minutes.
-               Supporting BTech, MCA, BCA, and MTech projects.
+             <p className="text-xl text-slate-600 mb-12 max-w-2xl mx-auto leading-relaxed font-bold">
+               Get Complete Report + Viva + PPT in Minutes. <br/>
+               <span className="text-slate-500 font-medium">Upload Any Project Format. We handle the rest.</span>
              </p>
              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <Link href="/generate" className="w-full sm:w-auto bg-blue-600 text-white px-10 py-5 rounded-2xl text-xl font-black hover:bg-blue-700 transition shadow-2xl shadow-blue-200 inline-block">
@@ -55,6 +55,29 @@ export default function Home() {
           </div>
         </section>
 
+        {/* Source Selection Section */}
+        <section id="generate" className="py-24 bg-white px-6">
+           <div className="max-w-6xl mx-auto text-center">
+              <h2 className="text-4xl font-black text-slate-900 mb-4">Start Here</h2>
+              <p className="text-slate-500 mb-12">Select your project source to begin automatic analysis.</p>
+
+              <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+                 {[
+                   { label: 'GitHub Repo', icon: '🔗', type: 'github' },
+                   { label: 'Upload ZIP', icon: '📦', type: 'zip' },
+                   { label: 'Upload PDF', icon: '📄', type: 'pdf' },
+                   { label: 'Upload DOCX', icon: '📝', type: 'docx' },
+                   { label: 'Describe Manually', icon: '⌨️', type: 'manual' }
+                 ].map((source, i) => (
+                   <Link key={i} href={`/generate?type=${source.type}`} className="flex flex-col items-center justify-center p-8 bg-slate-50 rounded-3xl border-2 border-transparent hover:border-blue-600 hover:bg-white transition-all group">
+                      <span className="text-4xl mb-4 group-hover:scale-110 transition-transform">{source.icon}</span>
+                      <span className="font-black text-slate-900">{source.label}</span>
+                   </Link>
+                 ))}
+              </div>
+           </div>
+        </section>
+
         {/* The Workflow */}
         <section id="how-it-works" className="py-24 bg-slate-50 px-6">
            <div className="max-w-6xl mx-auto">
@@ -64,9 +87,9 @@ export default function Home() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                  {[
-                   { step: "01", title: "Paste GitHub URL", desc: "Link your project repository. We analyze your code, structure, and tech stack automatically." },
-                   { step: "02", title: "Analyze Project", desc: "Our engine understands your project's features, database design, and architecture modules." },
-                   { step: "03", title: "Generate Report", desc: "Download your 17-section project report, 50+ Viva Q&A, and professional PPT outline." }
+                   { step: "01", title: "Select Your Source", desc: "Upload code (ZIP), link GitHub, or provide an existing draft report (PDF/DOCX)." },
+                   { step: "02", title: "Analyze & Extract", desc: "Our engine extracts your tech stack, features, and system architecture automatically." },
+                   { step: "03", title: "Unlock Your Kit", desc: "Download your 17-section project report, 50+ Viva Q&A, and professional PPT slides." }
                  ].map((item, i) => (
                    <div key={i} className="bg-white p-10 rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl transition-shadow group">
                       <div className="text-6xl font-black text-slate-100 group-hover:text-blue-50 transition-colors mb-6">{item.step}</div>

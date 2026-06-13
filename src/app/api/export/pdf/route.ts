@@ -1,79 +1,33 @@
 import { NextResponse } from 'next/server';
 import db from '@/lib/db';
-import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
-import { cookies } from 'next/headers';
+import { generateProfessionalPDF } from '@/lib/pdf-renderer';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const projectId = searchParams.get('projectId');
-  const cookieStore = await cookies();
-  const userId = cookieStore.get('user_id')?.value;
 
-  if (!projectId) {
-    return NextResponse.json({ error: 'Project ID is required' }, { status: 400 });
-  }
+  if (!projectId) return NextResponse.json({ error: 'Project ID required' }, { status: 400 });
 
-  const project = db.prepare('SELECT * FROM projects WHERE id = ?').get(projectId) as {
-    id: string;
-    user_id: string;
-    title: string;
-    content: string;
-    is_paid: number;
-  } | undefined;
-
-  if (!project || project.is_paid !== 1 || project.user_id !== userId) {
-    return NextResponse.json({ error: 'Unauthorized or not paid' }, { status: 403 });
-  }
+  const project = db.prepare('SELECT * FROM projects WHERE id = ?').get(projectId) as any;
+  if (!project) return NextResponse.json({ error: 'Project not found' }, { status: 404 });
+  if (project.is_paid !== 1) return NextResponse.json({ error: 'Payment required' }, { status: 402 });
 
   const content = JSON.parse(project.content);
+  const user = db.prepare('SELECT email FROM users WHERE id = ?').get(project.user_id) as any;
 
-  const pdfDoc = await PDFDocument.create();
-  const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
-  const boldFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+  const pdfBuffer = await generateProfessionalPDF({
+    title: project.title,
+    university: project.university,
+    studentName: user.email.split('@')[0],
+    academicLevel: project.academic_level,
+    sections: content,
+    techStack: project.tech_stack
+  });
 
-  let page = pdfDoc.addPage();
-  const { height } = page.getSize();
-  let y = height - 50;
-
-  for (const [section, text] of Object.entries(content)) {
-    if (y < 100) {
-      page = pdfDoc.addPage();
-      y = height - 50;
-    }
-
-    page.drawText(section, { x: 50, y, size: 18, font: boldFont, color: rgb(0, 0, 0.8) });
-    y -= 30;
-
-    const lines = (text as string).split('\n');
-    for (const line of lines) {
-      const words = line.split(' ');
-      let currentLine = '';
-
-      for (const word of words) {
-        if (currentLine.length + word.length > 80) {
-          page.drawText(currentLine, { x: 50, y, size: 12, font });
-          y -= 15;
-          currentLine = word + ' ';
-          if (y < 50) {
-            page = pdfDoc.addPage();
-            y = height - 50;
-          }
-        } else {
-          currentLine += word + ' ';
-        }
-      }
-      page.drawText(currentLine, { x: 50, y, size: 12, font });
-      y -= 15;
-    }
-    y -= 20;
-  }
-
-  const pdfBytes = await pdfDoc.save();
-
-  return new NextResponse(pdfBytes as unknown as BodyInit, {
+  return new Response(pdfBuffer, {
     headers: {
       'Content-Type': 'application/pdf',
-      'Content-Disposition': `attachment; filename="${project.title.replace(/\s+/g, '_')}_Documentation.pdf"`,
-    },
+      'Content-Disposition': `attachment; filename="${project.title}_Report.pdf"`
+    }
   });
 }

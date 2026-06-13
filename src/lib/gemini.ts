@@ -11,6 +11,8 @@ const embeddingModel = genAI.getGenerativeModel({ model: "text-embedding-004" })
 
 import { RepoAnalysis } from "./repository-analyzer";
 
+import { ProjectProfile } from "./project-profiler";
+
 export interface ProjectInputs {
   title: string;
   category: string;
@@ -19,16 +21,16 @@ export interface ProjectInputs {
   problemStatement: string;
   academicLevel: string;
   university?: string;
-  repoAnalysis?: RepoAnalysis;
+  repoAnalysis?: ProjectProfile;
 }
 
 export async function generateProjectDocumentation(inputs: ProjectInputs, retryCount = 0): Promise<Record<string, string>> {
   const repoContext = inputs.repoAnalysis ? `
     GitHub Repository Context:
-    - Analyzed Tech Stack: ${inputs.repoAnalysis.tech_stack.join(", ")}
-    - Identified Modules: ${inputs.repoAnalysis.modules.join(", ")}
+    - Analyzed Tech Stack: ${inputs.repoAnalysis.techStack?.join(", ")}
+    - Identified Modules: ${inputs.repoAnalysis.modules?.join(", ")}
     - Identified Database: ${inputs.repoAnalysis.database}
-    - Repository Features: ${inputs.repoAnalysis.features.join(", ")}
+    - Repository Features: ${inputs.repoAnalysis.features?.join(", ")}
   ` : "";
 
   const prompt = `
@@ -42,7 +44,7 @@ export async function generateProjectDocumentation(inputs: ProjectInputs, retryC
     ${repoContext}
 
     The JSON must contain exactly these keys:
-    "Abstract", "Introduction", "Problem Statement", "Objectives", "Existing System", "Proposed System", "Methodology", "Modules", "Database Design", "Testing Strategy", "Future Scope", "Conclusion", "References", "Viva Questions", "PPT Outline", "Viva Preparation Kit", "PPT Presentation Kit"
+    "Title Page", "Abstract", "Introduction", "Problem Statement", "Objectives", "Existing System", "Proposed System", "System Requirements", "Methodology", "Modules", "Database Design", "Testing Strategy", "Future Scope", "Conclusion", "References", "Viva Questions", "PPT Outline", "Viva Preparation Kit", "PPT Presentation Kit"
 
     Requirements:
     - Formal academic tone, adhering to ${inputs.university || 'standard academic'} formatting guidelines.
@@ -65,8 +67,8 @@ export async function generateProjectDocumentation(inputs: ProjectInputs, retryC
 
     // Validation
     const requiredSections = [
-      "Abstract", "Introduction", "Problem Statement", "Objectives", "Existing System",
-      "Proposed System", "Methodology", "Modules", "Database Design", "Testing Strategy",
+      "Title Page", "Abstract", "Introduction", "Problem Statement", "Objectives", "Existing System",
+      "Proposed System", "System Requirements", "Methodology", "Modules", "Database Design", "Testing Strategy",
       "Future Scope", "Conclusion", "References", "Viva Questions", "PPT Outline"
     ];
 

@@ -21,7 +21,7 @@ export async function POST(request: Request) {
     const id = uuidv4();
     db.prepare(`
       INSERT INTO feedback (id, user_id, rating, comment)
-      VALUES (?, ?, ?)
+      VALUES (?, ?, ?, ?)
     `).run(id, userId, rating, comment);
 
     return NextResponse.json({ success: true });

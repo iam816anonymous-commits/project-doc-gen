@@ -1,11 +1,12 @@
-# Jules - AI Project Documentation Generator
+# ReportReady - AI Project Submission Kit Generator
 
-Jules is a micro-SaaS designed to help BTech, MCA, and BCA students generate complete academic project documentation packages in minutes.
+ReportReady is a micro-SaaS designed to help BTech, MCA, and BCA students "Turn Any Project Into A Complete Submission Kit" in minutes.
 
 ## 🚀 Product Overview
-Stop spending weeks on manual documentation. Jules uses Gemini AI to create professional, academic-grade reports tailored to your specific project title and tech stack.
+Stop spending weeks on manual documentation. ReportReady uses Gemini AI to create professional, academic-grade reports from your GitHub repo, source code (ZIP), or existing drafts.
 
 ## ✨ Features
+- **Multi-Source Intake**: Import from GitHub, ZIP Upload, PDF/DOCX drafts, or Manual Entry.
 - **Instant Generation**: 17+ sections generated in under a minute.
 - **Academic Standards**: Tailored for BTech, MCA, BCA, and Diploma levels.
 - **Manual UPI Verification**: Simple ₹99 payment flow via UPI.

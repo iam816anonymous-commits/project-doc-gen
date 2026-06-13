@@ -1,0 +1,122 @@
+
+> jules-app@0.1.0 dev
+> next dev
+
+   ▲ Next.js 15.1.4
+   - Local:        http://localhost:3000
+   - Network:      http://192.168.0.2:3000
+
+ ✓ Starting...
+ ✓ Ready in 3.3s
+ ○ Compiling / ...
+ ✓ Compiled / in 4s (610 modules)
+ ✓ Compiled in 812ms (284 modules)
+ GET / 200 in 4905ms
+ ○ Compiling /generate ...
+ ✓ Compiled /generate in 934ms (643 modules)
+ GET /generate 200 in 1297ms
+ ✓ Compiled /generate/details in 451ms (654 modules)
+ GET /generate/details?source=zip 200 in 642ms
+ ✓ Compiled in 1820ms (318 modules)
+ ✓ Compiled in 302ms (318 modules)
+ ✓ Compiled in 323ms (318 modules)
+ ✓ Compiled in 271ms (318 modules)
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 521ms (634 modules)
+ HEAD / 404 in 1062ms
+ GET / 404 in 89ms
+ GET /_next/static/css/app/layout.css?v=1781354837289 404 in 113ms
+ GET /_next/static/media/22a5144ee8d83bca-s.p.woff2 404 in 175ms
+ GET /_next/static/media/7d4881bb7e1bf84d-s.p.woff2 404 in 173ms
+ GET /_next/static/chunks/main-app.js?v=1781354837289 404 in 155ms
+ GET /_next/static/chunks/app/page.js 404 in 65ms
+ GET /_next/static/chunks/app-pages-internals.js 404 in 69ms
+ ○ Compiling /admin ...
+ ✓ Compiled /admin in 814ms (682 modules)
+ GET /admin 307 in 1093ms
+ GET / 404 in 44ms
+ GET /_next/static/css/app/layout.css?v=1781354838661 404 in 50ms
+ GET /_next/static/media/7d4881bb7e1bf84d-s.p.woff2 404 in 101ms
+ GET /_next/static/media/22a5144ee8d83bca-s.p.woff2 404 in 103ms
+ GET /_next/static/chunks/app-pages-internals.js 404 in 97ms
+ GET /_next/static/chunks/main-app.js?v=1781354838661 404 in 100ms
+ GET /_next/static/chunks/app/page.js 404 in 35ms
+ ○ Compiling /_error ...
+ ✓ Compiled /_error in 2.7s (885 modules)
+ HEAD / 404 in 3315ms
+ ✓ Compiled in 654ms (523 modules)
+ ✓ Compiled in 487ms (523 modules)
+ ✓ Compiled in 199ms (523 modules)
+ ✓ Compiled in 158ms (523 modules)
+ ✓ Compiled in 819ms (562 modules)
+ ✓ Compiled in 490ms (523 modules)
+ ✓ Compiled in 185ms (523 modules)
+ ✓ Compiled in 354ms (562 modules)
+ ✓ Compiled in 147ms (523 modules)
+ ✓ Compiled in 139ms (523 modules)
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, rename '/app/.next/cache/webpack/client-development/0.pack.gz_' -> '/app/.next/cache/webpack/client-development/0.pack.gz'
+ ✓ Compiled in 231ms (523 modules)
+ ✓ Compiled in 318ms (523 modules)
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, rename '/app/.next/cache/webpack/client-development/0.pack.gz_' -> '/app/.next/cache/webpack/client-development/0.pack.gz'
+ ✓ Compiled in 253ms (523 modules)
+ ✓ Compiled in 149ms (523 modules)
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, rename '/app/.next/cache/webpack/client-development/0.pack.gz_' -> '/app/.next/cache/webpack/client-development/0.pack.gz'
+ ✓ Compiled in 366ms (523 modules)
+ ✓ Compiled in 153ms (523 modules)
+ ✓ Compiled in 278ms (576 modules)
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, rename '/app/.next/cache/webpack/client-development/0.pack.gz_' -> '/app/.next/cache/webpack/client-development/0.pack.gz'
+ ✓ Compiled in 728ms (523 modules)
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, rename '/app/.next/cache/webpack/client-development/0.pack.gz_' -> '/app/.next/cache/webpack/client-development/0.pack.gz'
+ ✓ Compiled in 244ms (523 modules)
+ ✓ Compiled in 191ms (523 modules)
+ ✓ Compiled in 910ms (562 modules)
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, rename '/app/.next/cache/webpack/client-development/0.pack.gz_' -> '/app/.next/cache/webpack/client-development/0.pack.gz'
+ ✓ Compiled in 422ms (523 modules)
+ ✓ Compiled in 393ms (523 modules)
+ ✓ Compiled in 202ms (523 modules)
+ ✓ Compiled in 599ms (522 modules)
+ ✓ Compiled in 337ms (522 modules)
+ ✓ Compiled in 150ms (522 modules)
+ ✓ Compiled in 412ms (561 modules)
+ ✓ Compiled in 141ms (522 modules)
+ ✓ Compiled in 160ms (522 modules)
+ ✓ Compiled in 351ms (561 modules)
+ ✓ Compiled in 697ms (575 modules)
+ ✓ Compiled in 359ms (522 modules)
+ ✓ Compiled in 171ms (522 modules)
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, rename '/app/.next/cache/webpack/client-development/1.pack.gz_' -> '/app/.next/cache/webpack/client-development/1.pack.gz'
+ ✓ Compiled in 184ms (522 modules)
+ ✓ Compiled in 239ms (522 modules)
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, rename '/app/.next/cache/webpack/client-development/0.pack.gz_' -> '/app/.next/cache/webpack/client-development/0.pack.gz'
+ ✓ Compiled in 306ms (522 modules)
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, rename '/app/.next/cache/webpack/client-development/0.pack.gz_' -> '/app/.next/cache/webpack/client-development/0.pack.gz'
+ ○ Compiling / ...
+ ✓ Compiled / in 1452ms (370 modules)
+ ⨯ [Error: Invariant: missing bootstrap script. This is a bug in Next.js] {
+  page: '/'
+}
+ ✓ Compiled /_error in 456ms (880 modules)
+ GET / 500 in 3238ms
+ GET / 200 in 198ms
+ GET / 200 in 138ms
+ ✓ Compiled /_not-found in 395ms (884 modules)
+ GET /_next/static/css/app/layout.css?v=1781358157203 404 in 500ms
+ GET /_next/static/media/22a5144ee8d83bca-s.p.woff2 404 in 515ms
+ GET /_next/static/chunks/app-pages-internals.js 404 in 491ms
+ GET /_next/static/media/7d4881bb7e1bf84d-s.p.woff2 404 in 506ms
+ GET /_next/static/chunks/app/page.js 404 in 491ms
+ GET /_next/static/chunks/main-app.js?v=1781358157203 404 in 498ms
+ ○ Compiling /generate ...
+ ✓ Compiled /generate in 841ms (388 modules)
+ GET /generate 200 in 1288ms
+ GET /_next/static/css/app/layout.css?v=1781358159170 404 in 108ms
+ GET /_next/static/media/22a5144ee8d83bca-s.p.woff2 404 in 324ms
+ GET /_next/static/media/7d4881bb7e1bf84d-s.p.woff2 404 in 325ms
+ GET /_next/static/chunks/app-pages-internals.js 404 in 224ms
+ GET /_next/static/chunks/main-app.js?v=1781358159170 404 in 231ms
+ GET /_next/static/chunks/app/page.js 404 in 219ms
+ GET /_next/static/chunks/app/generate/page.js 404 in 112ms
+ ✓ Compiled in 420ms (522 modules)
+ ✓ Compiled in 159ms (522 modules)
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, rename '/app/.next/cache/webpack/client-development/1.pack.gz_' -> '/app/.next/cache/webpack/client-development/1.pack.gz'
+ ✓ Compiled in 392ms (522 modules)

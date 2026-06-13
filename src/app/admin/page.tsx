@@ -1,6 +1,7 @@
 import db from '@/lib/db';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
+import AdminTabs from './AdminTabs';
 
 export const dynamic = 'force-dynamic';
 
@@ -32,6 +33,20 @@ export default async function AdminPage() {
     JOIN users u ON s.user_id = u.id
     ORDER BY s.submitted_at DESC
   `).all() as Submission[];
+
+  const feedback = db.prepare(`
+    SELECT f.*, u.email as user_email
+    FROM feedback f
+    JOIN users u ON f.user_id = u.id
+    ORDER BY f.created_at DESC
+  `).all();
+
+  const evidence = db.prepare(`
+    SELECT e.*, u.email as user_email
+    FROM referral_evidence e
+    JOIN users u ON e.user_id = u.id
+    ORDER BY e.submitted_at DESC
+  `).all();
 
   const stats = db.prepare(`
     SELECT
@@ -72,34 +87,12 @@ export default async function AdminPage() {
              </div>
            ))}
         </div>
-        <table className="min-w-full bg-white border">
-          <thead>
-            <tr>
-              <th className="border p-2">User</th>
-              <th className="border p-2">Project</th>
-              <th className="border p-2">Status</th>
-              <th className="border p-2">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {submissions.map((sub) => (
-              <tr key={sub.id}>
-                <td className="border p-2">{sub.user_email}</td>
-                <td className="border p-2">{sub.project_title}</td>
-                <td className="border p-2">{sub.status}</td>
-                <td className="border p-2">
-                  {sub.status === 'PENDING' && (
-                    <form action="/api/admin/verify-payment" method="POST">
-                      <input type="hidden" name="submissionId" value={sub.id} />
-                      <button name="action" value="APPROVE" className="text-green-600 mr-2">Approve</button>
-                      <button name="action" value="REJECT" className="text-red-600">Reject</button>
-                    </form>
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+
+        <AdminTabs
+          submissions={submissions}
+          feedback={feedback}
+          evidence={evidence}
+        />
       </div>
     </div>
   );

@@ -3,17 +3,26 @@
 import { useState } from 'react';
 import { Check, X, MessageSquare, CreditCard, Share2, Star } from 'lucide-react';
 
-export default function AdminTabs({ submissions, feedback, evidence, adminSecret }: any) {
+export default function AdminTabs({ submissions, feedback, evidence }: any) {
   const [activeTab, setActiveTab] = useState('payments');
 
   const handleVerifyEvidence = async (id: string, status: string) => {
+    const notes = prompt('Enter verification notes (optional):');
     const res = await fetch('/api/admin/referrals/verify', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'x-admin-secret': adminSecret
+        'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ id, status })
+      body: JSON.stringify({ id, status, notes })
+    });
+    if (res.ok) window.location.reload();
+  };
+
+  const handleVerifyPayment = async (submissionId: string, action: string) => {
+    const res = await fetch('/api/admin/verify-payment', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ submissionId, action })
     });
     if (res.ok) window.location.reload();
   };
@@ -66,7 +75,9 @@ export default function AdminTabs({ submissions, feedback, evidence, adminSecret
                     <td className="py-4">
                       {sub.status === 'PENDING' && (
                         <div className="flex gap-2">
-                           <a href={sub.screenshot_path} target="_blank" className="text-blue-600 hover:underline">View Proof</a>
+                           <a href={sub.screenshot_path} target="_blank" className="text-blue-600 hover:underline mr-4">View Proof</a>
+                           <button onClick={() => handleVerifyPayment(sub.id, 'APPROVE')} className="text-green-600 hover:underline font-bold">Approve</button>
+                           <button onClick={() => handleVerifyPayment(sub.id, 'REJECT')} className="text-red-600 hover:underline ml-2">Reject</button>
                         </div>
                       )}
                     </td>
@@ -107,7 +118,13 @@ export default function AdminTabs({ submissions, feedback, evidence, adminSecret
                 </div>
                 <div className="p-4">
                   <p className="text-xs text-gray-500 mb-1">{ev.user_email}</p>
-                  <p className="text-xs font-bold uppercase mb-4 tracking-wider">Status: <span className={ev.status === 'APPROVED' ? 'text-green-600' : ev.status === 'PENDING' ? 'text-amber-600' : 'text-red-600'}>{ev.status}</span></p>
+                  <div className="mb-2">
+                    <p className="text-[10px] font-bold text-gray-400">GROUP: {ev.group_name || 'N/A'}</p>
+                    <p className="text-[10px] font-bold text-gray-400">MEMBERS: {ev.member_count || '?'}</p>
+                    <p className="text-[10px] font-bold text-gray-400">TS VISIBLE: {ev.timestamp_visible ? 'YES' : 'NO'}</p>
+                  </div>
+                  <p className="text-xs font-bold uppercase mb-2 tracking-wider">Status: <span className={ev.status === 'APPROVED' ? 'text-green-600' : ev.status === 'PENDING' ? 'text-amber-600' : 'text-red-600'}>{ev.status}</span></p>
+                  {ev.verification_notes && <p className="text-[10px] text-blue-600 mb-4 bg-blue-50 p-2 rounded italic">Note: {ev.verification_notes}</p>}
 
                   {ev.status === 'PENDING' && (
                     <div className="grid grid-cols-2 gap-2">
