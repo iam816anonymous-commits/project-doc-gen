@@ -66,6 +66,14 @@ db.exec(`
     expires_at DATETIME NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   );
+
+  CREATE TABLE IF NOT EXISTS agreement_acceptances (
+    id TEXT PRIMARY KEY,
+    user_id TEXT NOT NULL,
+    accepted_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    terms_version TEXT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+  );
 `);
 
 export default db;
