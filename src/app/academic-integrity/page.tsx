@@ -4,7 +4,7 @@ export default function AcademicIntegrityPage() {
       <h1>Academic Integrity Notice</h1>
       <p className="text-gray-500">Last Updated: June 15, 2026</p>
 
-      <p>Jules is designed to be a <strong>drafting assistant</strong>, not a replacement for your own learning and project work.</p>
+      <p>ReportReady is designed to be a <strong>drafting assistant</strong>, not a replacement for your own learning and project work.</p>
 
       <h2>Guidelines for Ethical Use:</h2>
       <ul>

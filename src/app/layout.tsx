@@ -32,41 +32,45 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col bg-white text-slate-900">
         <main className="flex-grow">
           {children}
         </main>
 
-        <footer className="bg-white border-t py-12 px-6">
-          <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
+        <footer className="bg-slate-50 border-t py-16 px-6">
+          <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
             <div className="col-span-1 md:col-span-2">
-              <Link href="/" className="text-2xl font-bold text-blue-600 mb-4 block">Jules</Link>
-              <p className="text-gray-500 max-w-xs">
-                AI-powered academic project documentation generator for BTech, MCA, and Diploma students.
+              <Link href="/" className="flex items-center gap-2 text-2xl font-black text-blue-600 mb-4">
+                <span className="bg-blue-600 text-white p-1.5 rounded-lg text-lg">📝</span>
+                ReportReady
+              </Link>
+              <p className="text-slate-500 max-w-sm leading-relaxed">
+                Empowering students to focus on coding while we handle the documentation.
+                The most trusted project report generator for BTech, MCA, and Diploma students.
               </p>
             </div>
 
             <div>
-              <h3 className="font-bold text-gray-900 mb-4">Legal</h3>
-              <ul className="space-y-2 text-sm text-gray-600">
-                <li><Link href="/terms" className="hover:text-blue-600">Terms of Service</Link></li>
-                <li><Link href="/privacy" className="hover:text-blue-600">Privacy Policy</Link></li>
-                <li><Link href="/disclaimer" className="hover:text-blue-600">Disclaimer</Link></li>
-                <li><Link href="/refund" className="hover:text-blue-600">Refund Policy</Link></li>
+              <h3 className="font-bold text-slate-900 mb-6 uppercase text-xs tracking-widest">Legal</h3>
+              <ul className="space-y-4 text-sm text-slate-600">
+                <li><Link href="/terms" className="hover:text-blue-600 transition">Terms of Service</Link></li>
+                <li><Link href="/privacy" className="hover:text-blue-600 transition">Privacy Policy</Link></li>
+                <li><Link href="/disclaimer" className="hover:text-blue-600 transition">Disclaimer</Link></li>
+                <li><Link href="/refund" className="hover:text-blue-600 transition">Refund Policy</Link></li>
               </ul>
             </div>
 
             <div>
-              <h3 className="font-bold text-gray-900 mb-4">Support</h3>
-              <ul className="space-y-2 text-sm text-gray-600">
-                <li><Link href="/academic-integrity" className="hover:text-blue-600">Academic Integrity</Link></li>
-                <li><Link href="/contact" className="hover:text-blue-600">Contact Us</Link></li>
-                <li><span className="text-gray-400">support@jules.ai</span></li>
+              <h3 className="font-bold text-slate-900 mb-6 uppercase text-xs tracking-widest">Support</h3>
+              <ul className="space-y-4 text-sm text-slate-600">
+                <li><Link href="/academic-integrity" className="hover:text-blue-600 transition">Academic Integrity</Link></li>
+                <li><Link href="/contact" className="hover:text-blue-600 transition">Contact Us</Link></li>
+                <li><span className="text-slate-400">support@reportready.in</span></li>
               </ul>
             </div>
           </div>
-          <div className="max-w-6xl mx-auto mt-12 pt-8 border-t text-center text-sm text-gray-400">
-            © 2026 Jules AI. All rights reserved.
+          <div className="max-w-6xl mx-auto mt-16 pt-8 border-t border-slate-200 text-center text-sm text-slate-400">
+            © 2026 ReportReady AI. Built for students, by students.
           </div>
         </footer>
       </body>

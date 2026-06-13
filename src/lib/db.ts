@@ -8,6 +8,8 @@ db.exec(`
   CREATE TABLE IF NOT EXISTS users (
     id TEXT PRIMARY KEY,
     email TEXT UNIQUE NOT NULL,
+    referral_code TEXT UNIQUE,
+    referred_by TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   );
 
@@ -74,6 +76,45 @@ db.exec(`
     terms_version TEXT NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id)
   );
+
+  CREATE TABLE IF NOT EXISTS feedback (
+    id TEXT PRIMARY KEY,
+    user_id TEXT NOT NULL,
+    rating INTEGER NOT NULL,
+    comment TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+  );
+
+  CREATE TABLE IF NOT EXISTS referrals (
+    id TEXT PRIMARY KEY,
+    referrer_id TEXT NOT NULL,
+    referred_id TEXT NOT NULL,
+    status TEXT DEFAULT 'REGISTERED', -- REGISTERED, CONVERTED
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (referrer_id) REFERENCES users(id),
+    FOREIGN KEY (referred_id) REFERENCES users(id)
+  );
+
+  CREATE TABLE IF NOT EXISTS referral_evidence (
+    id TEXT PRIMARY KEY,
+    user_id TEXT NOT NULL,
+    image_path TEXT NOT NULL,
+    status TEXT DEFAULT 'PENDING', -- PENDING, APPROVED, REJECTED
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+  );
 `);
+
+// Handle migrations for existing tables
+try {
+  db.exec(`ALTER TABLE users ADD COLUMN referral_code TEXT`);
+} catch (e) {}
+try {
+  db.exec(`ALTER TABLE users ADD COLUMN referred_by TEXT`);
+} catch (e) {}
+try {
+  db.exec(`CREATE UNIQUE INDEX IF NOT EXISTS idx_users_referral_code ON users(referral_code)`);
+} catch (e) {}
 
 export default db;

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export default function GeneratePage() {
   const router = useRouter();
@@ -84,10 +85,11 @@ export default function GeneratePage() {
 
   if (step === 'otp') {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-        <div className="max-w-md w-full bg-white p-8 rounded-2xl shadow-sm border text-center">
-           <h1 className="text-2xl font-bold mb-4">Verify Identity</h1>
-           <p className="text-gray-600 mb-8">We&apos;ve sent a 6-digit code to <strong>{formData.email}</strong></p>
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
+        <div className="max-w-md w-full bg-white p-10 rounded-[2rem] shadow-xl border border-slate-100 text-center">
+           <div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center text-2xl mb-6 mx-auto">📧</div>
+           <h1 className="text-2xl font-black mb-2 text-slate-900">Verify Your Email</h1>
+           <p className="text-slate-500 mb-8 font-medium">We&apos;ve sent a 6-digit code to <br/><span className="text-slate-900 font-bold">{formData.email}</span></p>
            <form onSubmit={handleVerifyAndGenerate} className="space-y-6">
               <input
                 required
@@ -97,16 +99,16 @@ export default function GeneratePage() {
                 value={formData.otp}
                 onChange={handleChange}
                 placeholder="000000"
-                className="w-full text-center text-3xl tracking-widest font-mono p-4 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                className="w-full text-center text-4xl tracking-[0.5em] font-black p-5 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:border-blue-600 focus:ring-0 outline-none transition-colors"
               />
               <button
                 disabled={loading}
                 type="submit"
-                className="w-full bg-blue-600 text-white py-3 rounded-lg font-bold text-lg hover:bg-blue-700 transition disabled:bg-blue-300 shadow-md"
+                className="w-full bg-blue-600 text-white py-5 rounded-2xl font-black text-xl hover:bg-blue-700 transition disabled:bg-blue-300 shadow-xl shadow-blue-100"
               >
-                {loading ? 'Verifying & Generating...' : 'Verify & Generate'}
+                {loading ? 'Generating Report...' : 'Verify & Generate'}
               </button>
-              <button type="button" onClick={() => setStep('details')} className="text-sm text-gray-500 hover:underline">Change email</button>
+              <button type="button" onClick={() => setStep('details')} className="text-sm text-slate-400 font-bold hover:text-blue-600 transition">Change email</button>
            </form>
         </div>
       </div>
@@ -114,66 +116,107 @@ export default function GeneratePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-3xl mx-auto bg-white p-8 rounded-2xl shadow-sm border">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2 text-center">Project Details</h1>
-        <p className="text-center text-gray-500 mb-8 italic">New: Paste GitHub URL to auto-fill (Beta)</p>
+    <div className="min-h-screen bg-slate-50 py-20 px-6">
+      <div className="max-w-3xl mx-auto">
+        <div className="text-center mb-12">
+           <Link href="/" className="text-blue-600 font-black mb-4 inline-block hover:underline">← Back to Home</Link>
+           <h1 className="text-4xl font-black text-slate-900 mb-4">Project Details</h1>
+           <p className="text-slate-500 font-medium">Provide your GitHub URL for the best results.</p>
+        </div>
 
-        <form onSubmit={handleRequestOTP} className="space-y-6">
-          <div className="bg-blue-50 p-4 rounded-xl border border-blue-100 mb-8">
-             <label className="block text-sm font-bold text-blue-800 mb-2">GitHub Repository URL (Optional)</label>
-             <input
-                type="url"
-                name="githubUrl"
-                placeholder="https://github.com/user/project"
-                value={formData.githubUrl}
-                onChange={handleChange}
-                className="w-full p-3 border border-blue-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none bg-white"
-             />
-             <p className="text-xs text-blue-600 mt-2">✨ Automatic analysis of README, code structure, and dependencies.</p>
-          </div>
+        <div className="bg-white p-10 rounded-[2.5rem] shadow-xl border border-slate-100">
+          <form onSubmit={handleRequestOTP} className="space-y-8">
+            <div className="bg-blue-600 p-8 rounded-3xl text-white shadow-xl shadow-blue-100 relative overflow-hidden">
+               <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 blur-3xl rounded-full"></div>
+               <label className="block text-sm font-black uppercase tracking-widest mb-3">Primary Method: GitHub URL</label>
+               <input
+                  type="url"
+                  name="githubUrl"
+                  placeholder="https://github.com/username/project-repo"
+                  value={formData.githubUrl}
+                  onChange={handleChange}
+                  className="w-full p-4 bg-white/10 border border-white/20 rounded-xl text-white placeholder:text-blue-200 focus:bg-white/20 focus:outline-none transition-all text-lg font-medium"
+               />
+               <p className="text-xs text-blue-100 mt-4 font-bold flex items-center gap-2">
+                 <span>✨</span> We will automatically detect your tech stack, modules, and architecture.
+               </p>
+            </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <input required type="text" name="title" placeholder="Project Title" value={formData.title} onChange={handleChange} className="w-full p-2 border rounded"/>
-            <select name="projectType" value={formData.projectType} onChange={handleChange} className="w-full p-2 border rounded">
-              <option>Web Development</option>
-              <option>AI</option>
-              <option>Mobile App</option>
-              <option>IoT</option>
-              <option>Cybersecurity</option>
-            </select>
-          </div>
-          <input required type="text" name="techStack" placeholder="Tech Stack (e.g. React, Node.js)" value={formData.techStack} onChange={handleChange} className="w-full p-2 border rounded"/>
-          <textarea required name="problemStatement" placeholder="What problem does it solve?" value={formData.problemStatement} onChange={handleChange} className="w-full p-2 border rounded" rows={3}/>
-          <textarea required name="features" placeholder="List key features..." value={formData.features} onChange={handleChange} className="w-full p-2 border rounded" rows={3}/>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <select name="academicLevel" value={formData.academicLevel} onChange={handleChange} className="w-full p-2 border rounded">
-              <option>Diploma</option>
-              <option>BCA</option>
-              <option>MCA</option>
-              <option>BTech</option>
-              <option>MTech</option>
-            </select>
-            <select name="university" value={formData.university} onChange={handleChange} className="w-full p-2 border rounded">
-              <option value="Standard">Other / Standard University</option>
-              <option>JNTU</option>
-              <option>VTU</option>
-              <option>Anna University</option>
-              <option>Osmania University</option>
-              <option>Mumbai University</option>
-            </select>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <input type="number" name="teamSize" value={formData.teamSize} onChange={handleChange} min="1" placeholder="Team Size" className="w-full p-2 border rounded"/>
-          </div>
-          <div className="border-t pt-6">
-            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-            <input required type="email" name="email" placeholder="your@email.com" value={formData.email} onChange={handleChange} className="w-full p-2 border rounded"/>
-          </div>
-          <button type="submit" disabled={loading} className="w-full bg-blue-600 text-white p-3 rounded font-bold text-lg">
-            {loading ? 'Sending OTP...' : 'Generate Documentation'}
-          </button>
-        </form>
+            <div className="relative py-4 flex items-center">
+              <div className="flex-grow border-t border-slate-100"></div>
+              <span className="flex-shrink mx-4 text-slate-300 font-bold text-xs uppercase tracking-widest">Or Enter Manually</span>
+              <div className="flex-grow border-t border-slate-100"></div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="space-y-2">
+                <label className="text-xs font-black uppercase tracking-widest text-slate-400">Project Title</label>
+                <input required type="text" name="title" placeholder="E-commerce Website" value={formData.title} onChange={handleChange} className="w-full p-4 bg-slate-50 border-2 border-slate-50 rounded-xl focus:border-blue-600 focus:bg-white outline-none transition-all font-medium"/>
+              </div>
+              <div className="space-y-2">
+                <label className="text-xs font-black uppercase tracking-widest text-slate-400">Category</label>
+                <select name="projectType" value={formData.projectType} onChange={handleChange} className="w-full p-4 bg-slate-50 border-2 border-slate-50 rounded-xl focus:border-blue-600 focus:bg-white outline-none transition-all font-medium">
+                  <option>Web Development</option>
+                  <option>Artificial Intelligence</option>
+                  <option>Mobile Application</option>
+                  <option>Internet of Things (IoT)</option>
+                  <option>Cybersecurity</option>
+                  <option>Cloud Computing</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-xs font-black uppercase tracking-widest text-slate-400">Tech Stack</label>
+              <input required type="text" name="techStack" placeholder="React, Node.js, MongoDB, Tailwind CSS" value={formData.techStack} onChange={handleChange} className="w-full p-4 bg-slate-50 border-2 border-slate-50 rounded-xl focus:border-blue-600 focus:bg-white outline-none transition-all font-medium"/>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-xs font-black uppercase tracking-widest text-slate-400">Problem Statement</label>
+              <textarea required name="problemStatement" placeholder="What is the real-world problem your project solves?" value={formData.problemStatement} onChange={handleChange} className="w-full p-4 bg-slate-50 border-2 border-slate-50 rounded-xl focus:border-blue-600 focus:bg-white outline-none transition-all font-medium" rows={3}/>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-xs font-black uppercase tracking-widest text-slate-400">Key Features</label>
+              <textarea required name="features" placeholder="User Auth, Admin Dashboard, Payment Integration..." value={formData.features} onChange={handleChange} className="w-full p-4 bg-slate-50 border-2 border-slate-50 rounded-xl focus:border-blue-600 focus:bg-white outline-none transition-all font-medium" rows={3}/>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="space-y-2">
+                <label className="text-xs font-black uppercase tracking-widest text-slate-400">Academic Level</label>
+                <select name="academicLevel" value={formData.academicLevel} onChange={handleChange} className="w-full p-4 bg-slate-50 border-2 border-slate-50 rounded-xl focus:border-blue-600 focus:bg-white outline-none transition-all font-medium">
+                  <option>Diploma</option>
+                  <option>BCA</option>
+                  <option>MCA</option>
+                  <option>BTech</option>
+                  <option>MTech</option>
+                </select>
+              </div>
+              <div className="space-y-2">
+                <label className="text-xs font-black uppercase tracking-widest text-slate-400">University Format</label>
+                <select name="university" value={formData.university} onChange={handleChange} className="w-full p-4 bg-slate-50 border-2 border-slate-50 rounded-xl focus:border-blue-600 focus:bg-white outline-none transition-all font-medium">
+                  <option value="Standard">Standard Academic Format</option>
+                  <option>JNTU</option>
+                  <option>VTU</option>
+                  <option>Anna University</option>
+                  <option>Osmania University</option>
+                  <option>Mumbai University</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="border-t border-slate-100 pt-8">
+              <div className="space-y-2 mb-8">
+                <label className="text-xs font-black uppercase tracking-widest text-slate-400">Your Email (to receive report)</label>
+                <input required type="email" name="email" placeholder="student@example.com" value={formData.email} onChange={handleChange} className="w-full p-4 bg-slate-50 border-2 border-slate-50 rounded-xl focus:border-blue-600 focus:bg-white outline-none transition-all font-medium"/>
+              </div>
+
+              <button type="submit" disabled={loading} className="w-full bg-blue-600 text-white p-5 rounded-2xl font-black text-xl hover:bg-blue-700 transition shadow-xl shadow-blue-100">
+                {loading ? 'Processing...' : 'Generate Project Report'}
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );
