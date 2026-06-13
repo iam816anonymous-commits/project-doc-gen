@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import db from '@/lib/db';
 import { v4 as uuidv4 } from 'uuid';
 import { cookies } from 'next/headers';
+import bcrypt from 'bcryptjs';
 
 export async function POST(request: Request) {
   try {
@@ -10,16 +11,24 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Email and code are required' }, { status: 400 });
     }
 
-    const otp = db.prepare('SELECT * FROM otps WHERE email = ? AND code = ? AND expires_at > datetime("now")').get(email, code) as { id: string } | undefined;
+    const otps = db.prepare('SELECT * FROM otps WHERE email = ? AND expires_at > datetime("now") ORDER BY created_at DESC').all(email) as any[];
 
-    if (!otp) {
+    let validOtp = null;
+    for (const otp of otps) {
+      const isMatch = await bcrypt.compare(code, otp.code_hash);
+      if (isMatch) {
+        validOtp = otp;
+        break;
+      }
+    }
+
+    if (!validOtp) {
       return NextResponse.json({ error: 'Invalid or expired OTP' }, { status: 401 });
     }
 
     // OTP is valid, consume it
-    db.prepare('DELETE FROM otps WHERE id = ?').run(otp.id);
+    db.prepare('DELETE FROM otps WHERE email = ?').run(email);
 
-    // Get or create user
     let user = db.prepare('SELECT * FROM users WHERE email = ?').get(email) as { id: string } | undefined;
     if (!user) {
       const userId = uuidv4();

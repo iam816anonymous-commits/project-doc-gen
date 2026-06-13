@@ -8,11 +8,17 @@ export interface ReportData {
   academicLevel: string;
   sections: Record<string, string>;
   techStack: string;
+  template?: any;
 }
 
 export async function generateProfessionalPDF(data: ReportData) {
   const doc = new jsPDF();
-  const { title, university, studentName, academicLevel, sections } = data;
+  const { title, university, studentName, academicLevel, sections, template } = data;
+
+  if (template) {
+     // Apply template-specific formatting
+     doc.setFont(template.font_family || 'helvetica');
+  }
 
   // 1. Cover Page
   doc.setFontSize(22);
@@ -43,11 +49,12 @@ export async function generateProfessionalPDF(data: ReportData) {
   doc.addPage();
 
   // 2. Certificate & Declaration (Placeholders)
+  const certText = template?.certificate_structure?.text || `This is to certify that the project entitled "${title}" is a bonafide work carried out by ${studentName} under our supervision...`;
   doc.setFontSize(18);
   doc.text('CERTIFICATE', 105, 30, { align: 'center' });
   doc.setFontSize(12);
-  doc.setFont('helvetica', 'normal');
-  doc.text(`This is to certify that the project entitled "${title}" is a bonafide work carried out by ${studentName} under our supervision...`, 20, 50, { maxWidth: 170 });
+  doc.setFont(template?.font_family || 'helvetica', 'normal');
+  doc.text(certText, 20, 50, { maxWidth: 170 });
   doc.addPage();
 
   // 3. Table of Contents

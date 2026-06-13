@@ -10,6 +10,7 @@ db.exec(`
     email TEXT UNIQUE NOT NULL,
     referral_code TEXT UNIQUE,
     referred_by TEXT,
+    free_generation_credits INTEGER DEFAULT 0,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   );
 
@@ -81,7 +82,13 @@ db.exec(`
     id TEXT PRIMARY KEY,
     user_id TEXT NOT NULL,
     rating INTEGER NOT NULL,
+    what_was_useful TEXT,
+    what_was_missing TEXT,
+    what_confused_you TEXT,
+    recommend BOOLEAN,
     comment TEXT,
+    status TEXT DEFAULT 'PENDING', -- PENDING, APPROVED, REJECTED
+    reward_granted BOOLEAN DEFAULT 0,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id)
   );
@@ -120,10 +127,65 @@ db.exec(`
   CREATE TABLE IF NOT EXISTS otps (
     id TEXT PRIMARY KEY,
     email TEXT NOT NULL,
-    code TEXT NOT NULL,
+    code_hash TEXT NOT NULL,
     expires_at DATETIME NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   );
+
+  CREATE TABLE IF NOT EXISTS admins (
+    id TEXT PRIMARY KEY,
+    username TEXT UNIQUE NOT NULL,
+    password_hash TEXT NOT NULL,
+    role TEXT DEFAULT 'EDITOR', -- SUPERADMIN, EDITOR
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  );
+
+  CREATE TABLE IF NOT EXISTS admin_sessions (
+    id TEXT PRIMARY KEY,
+    admin_id TEXT NOT NULL,
+    expires_at DATETIME NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (admin_id) REFERENCES admins(id)
+  );
+
+  CREATE TABLE IF NOT EXISTS university_templates (
+    id TEXT PRIMARY KEY,
+    university_name TEXT NOT NULL,
+    department TEXT,
+    regulation_year TEXT,
+    degree_type TEXT,
+    sample_file_path TEXT,
+    cover_page_structure JSON,
+    certificate_structure JSON,
+    declaration_structure JSON,
+    acknowledgement_structure JSON,
+    heading_styles JSON,
+    font_family TEXT,
+    font_size INTEGER,
+    page_margins JSON,
+    line_spacing REAL,
+    toc_structure JSON,
+    reference_style TEXT,
+    formatting_rules_json JSON,
+    status TEXT DEFAULT 'DRAFT', -- DRAFT, VERIFIED, ACTIVE
+    confidence_score REAL DEFAULT 0.0,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  );
+
+  CREATE TABLE IF NOT EXISTS template_contributions (
+    id TEXT PRIMARY KEY,
+    user_id TEXT,
+    university_name TEXT NOT NULL,
+    department TEXT,
+    file_path TEXT NOT NULL,
+    file_type TEXT NOT NULL, -- PDF, DOCX
+    status TEXT DEFAULT 'PENDING', -- PENDING, ANALYZED, REJECTED
+    reward_granted BOOLEAN DEFAULT 0,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+  );
+
+  CREATE INDEX IF NOT EXISTS idx_uni_name ON university_templates(university_name);
 `);
 
 // Handle migrations for existing tables
@@ -135,6 +197,9 @@ try {
 } catch (e) {}
 try {
   db.exec(`CREATE UNIQUE INDEX IF NOT EXISTS idx_users_referral_code ON users(referral_code)`);
+} catch (e) {}
+try {
+  db.exec(`ALTER TABLE users ADD COLUMN free_generation_credits INTEGER DEFAULT 0`);
 } catch (e) {}
 
 export default db;

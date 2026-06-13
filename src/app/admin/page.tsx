@@ -1,7 +1,7 @@
 import db from '@/lib/db';
-import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import AdminTabs from './AdminTabs';
+import { getAdmin } from '@/lib/admin-auth';
 
 export const dynamic = 'force-dynamic';
 
@@ -18,12 +18,10 @@ interface Submission {
 }
 
 export default async function AdminPage() {
-  // Admin protection: Compare cookie with ADMIN_SECRET environment variable
-  const cookieStore = await cookies();
-  const adminToken = cookieStore.get('admin_token')?.value;
+  const admin = await getAdmin();
 
-  if (adminToken !== process.env.ADMIN_SECRET) {
-    return redirect('/');
+  if (!admin) {
+    return redirect('/admin/login');
   }
 
   const submissions = db.prepare(`

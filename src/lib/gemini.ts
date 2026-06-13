@@ -22,9 +22,19 @@ export interface ProjectInputs {
   academicLevel: string;
   university?: string;
   repoAnalysis?: ProjectProfile;
+  template?: any;
 }
 
 export async function generateProjectDocumentation(inputs: ProjectInputs, retryCount = 0): Promise<Record<string, string>> {
+  const templateContext = inputs.template ? `
+    University Template Formatting Rules:
+    - Cover Page Structure: ${JSON.stringify(inputs.template.cover_page_structure)}
+    - Certificate Text: ${JSON.stringify(inputs.template.certificate_structure)}
+    - Declaration Text: ${JSON.stringify(inputs.template.declaration_structure)}
+    - Font: ${inputs.template.font_family}, Size: ${inputs.template.font_size}
+    - Heading Styles: ${JSON.stringify(inputs.template.heading_styles)}
+  ` : "";
+
   const repoContext = inputs.repoAnalysis ? `
     GitHub Repository Context:
     - Analyzed Tech Stack: ${inputs.repoAnalysis.techStack?.join(", ")}
@@ -41,6 +51,7 @@ export async function generateProjectDocumentation(inputs: ProjectInputs, retryC
     Features: ${inputs.features}
     Problem Statement: ${inputs.problemStatement}
     Academic Level: ${inputs.academicLevel}
+    ${templateContext}
     ${repoContext}
 
     The JSON must contain exactly these keys:

@@ -1,42 +1,36 @@
 'use client';
 
 import { useState } from 'react';
-import { Star, Send, CheckCircle } from 'lucide-react';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { Star, Loader2, Send, CheckCircle2 } from 'lucide-react';
 
 export default function FeedbackPage() {
-  const [rating, setRating] = useState(0);
-  const [comment, setComment] = useState('');
-  const [hover, setHover] = useState(0);
+  const router = useRouter();
+  const [rating, setRating] = useState(5);
+  const [useful, setUseful] = useState('');
+  const [missing, setMissing] = useState('');
+  const [confused, setConfused] = useState('');
+  const [recommend, setRecommend] = useState(true);
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (rating === 0) {
-      setError('Please select a rating');
-      return;
-    }
-
     setLoading(true);
-    setError('');
-
     try {
-      const res = await fetch('/api/feedback', {
+      const res = await fetch('/api/feedback/submit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ rating, comment }),
+        body: JSON.stringify({ rating, useful, missing, confused, recommend })
       });
-
+      const data = await res.json();
       if (res.ok) {
         setSubmitted(true);
       } else {
-        const data = await res.json();
-        setError(data.error || 'Failed to submit feedback');
+        alert(data.error);
       }
-    } catch (_err) {
-      setError('Something went wrong. Please try again.');
+    } catch (err) {
+      alert('Submission failed');
     } finally {
       setLoading(false);
     }
@@ -44,98 +38,118 @@ export default function FeedbackPage() {
 
   if (submitted) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center px-4">
-        <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 text-center">
-          <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-            <CheckCircle className="w-10 h-10 text-green-600" />
-          </div>
-          <h1 className="text-2xl font-bold text-slate-900 mb-2">Thank You!</h1>
-          <p className="text-slate-600 mb-8">
-            Your feedback helps us improve ReportReady for students like you.
-          </p>
-          <Link
-            href="/"
-            className="inline-block w-full bg-blue-600 text-white font-semibold py-3 px-6 rounded-xl hover:bg-blue-700 transition-colors"
-          >
-            Back to Home
-          </Link>
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6 text-center">
+        <div className="max-w-md bg-white p-12 rounded-[3rem] border shadow-xl">
+           <div className="w-20 h-20 bg-green-100 text-green-600 rounded-3xl flex items-center justify-center mx-auto mb-8">
+              <CheckCircle2 className="w-12 h-12" />
+           </div>
+           <h1 className="text-3xl font-black text-slate-900 mb-4">Feedback Received!</h1>
+           <p className="text-slate-500 font-medium mb-8">
+              Thank you for being a founding student. Our team will review your feedback and grant your free credit within 24 hours.
+           </p>
+           <button
+             onClick={() => router.push('/')}
+             className="w-full bg-slate-900 text-white py-4 rounded-xl font-black"
+           >
+              Return Home
+           </button>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-xl mx-auto">
-        <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
-          <div className="bg-blue-600 px-8 py-10 text-white text-center">
-            <h1 className="text-3xl font-bold mb-2">We Value Your Feedback</h1>
-            <p className="text-blue-100">Help us make ReportReady better</p>
-          </div>
+    <div className="min-h-screen bg-slate-50 py-20 px-6">
+      <div className="max-w-2xl mx-auto">
+        <div className="text-center mb-12">
+           <h1 className="text-4xl font-black text-slate-900 mb-4">Founding Student Feedback</h1>
+           <p className="text-slate-500 font-medium italic">Help us improve ReportReady and get 1 Free Premium Unlock.</p>
+        </div>
 
-          <form onSubmit={handleSubmit} className="p-8 space-y-8">
-            {error && (
-              <div className="bg-red-50 text-red-600 p-4 rounded-xl text-sm font-medium border border-red-100">
-                {error}
+        <form onSubmit={handleSubmit} className="bg-white p-8 md:p-12 rounded-[3rem] border shadow-sm space-y-8">
+           <div className="space-y-4">
+              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Overall Rating</label>
+              <div className="flex gap-4">
+                 {[1, 2, 3, 4, 5].map((num) => (
+                   <button
+                     key={num}
+                     type="button"
+                     onClick={() => setRating(num)}
+                     className={`w-12 h-12 rounded-xl font-black text-xl transition ${rating === num ? 'bg-blue-600 text-white shadow-lg shadow-blue-200' : 'bg-slate-50 text-slate-400 hover:bg-slate-100'}`}
+                   >
+                     {num}
+                   </button>
+                 ))}
               </div>
-            )}
+           </div>
 
-            <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-4 text-center">
-                How would you rate your experience?
-              </label>
-              <div className="flex justify-center gap-2">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <button
-                    key={star}
-                    type="button"
-                    onClick={() => setRating(star)}
-                    onMouseEnter={() => setHover(star)}
-                    onMouseLeave={() => setHover(0)}
-                    className="p-1 focus:outline-none transition-transform hover:scale-110"
-                  >
-                    <Star
-                      className={`w-10 h-10 ${
-                        star <= (hover || rating)
-                          ? 'fill-yellow-400 text-yellow-400'
-                          : 'text-slate-300'
-                      }`}
-                    />
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <label htmlFor="comment" className="block text-sm font-semibold text-slate-700 mb-2">
-                What did you like? What was missing?
-              </label>
+           <div className="space-y-4">
+              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">What was useful?</label>
               <textarea
-                id="comment"
-                rows={4}
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
-                placeholder="Tell us what you think..."
-                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
-              ></textarea>
-            </div>
+                className="w-full p-6 bg-slate-50 rounded-2xl border-2 border-transparent focus:border-blue-600 focus:bg-white outline-none transition min-h-[120px] font-medium"
+                placeholder="Be specific about the sections, AI intelligence, or ease of use..."
+                value={useful}
+                onChange={(e) => setUseful(e.target.value)}
+                required
+              />
+           </div>
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-blue-600 text-white font-bold py-4 px-6 rounded-xl hover:bg-blue-700 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
-            >
-              {loading ? (
-                'Submitting...'
-              ) : (
+           <div className="space-y-4">
+              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">What was missing?</label>
+              <textarea
+                className="w-full p-6 bg-slate-50 rounded-2xl border-2 border-transparent focus:border-blue-600 focus:bg-white outline-none transition min-h-[120px] font-medium"
+                placeholder="What sections or features would you like to see?"
+                value={missing}
+                onChange={(e) => setMissing(e.target.value)}
+                required
+              />
+           </div>
+
+           <div className="space-y-4">
+              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">What confused you?</label>
+              <textarea
+                className="w-full p-6 bg-slate-50 rounded-2xl border-2 border-transparent focus:border-blue-600 focus:bg-white outline-none transition min-h-[120px] font-medium"
+                placeholder="Was anything hard to find or understand?"
+                value={confused}
+                onChange={(e) => setConfused(e.target.value)}
+                required
+              />
+           </div>
+
+           <div className="flex items-center gap-4 py-4 border-t">
+              <label className="text-sm font-bold text-slate-700">Would you recommend this to a classmate?</label>
+              <div className="flex gap-2">
+                 <button
+                   type="button"
+                   onClick={() => setRecommend(true)}
+                   className={`px-4 py-2 rounded-lg font-black text-xs ${recommend ? 'bg-green-600 text-white' : 'bg-slate-100 text-slate-400'}`}
+                 >
+                    YES
+                 </button>
+                 <button
+                   type="button"
+                   onClick={() => setRecommend(false)}
+                   className={`px-4 py-2 rounded-lg font-black text-xs ${!recommend ? 'bg-red-600 text-white' : 'bg-slate-100 text-slate-400'}`}
+                 >
+                    NO
+                 </button>
+              </div>
+           </div>
+
+           <button
+             disabled={loading || (useful.length + missing.length + confused.length < 100)}
+             className="w-full bg-blue-600 text-white py-6 rounded-2xl font-black text-xl flex items-center justify-center gap-3 hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+           >
+              {loading ? <Loader2 className="animate-spin" /> : (
                 <>
-                  <Send className="w-5 h-5" />
-                  Submit Feedback
+                   Submit & Claim Reward <Send className="w-5 h-5" />
                 </>
               )}
-            </button>
-          </form>
-        </div>
+           </button>
+           <p className="text-center text-[10px] font-black uppercase tracking-widest text-slate-400">
+              Minimum 100 characters required across all fields
+           </p>
+        </form>
       </div>
     </div>
   );

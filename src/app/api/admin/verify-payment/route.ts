@@ -1,16 +1,13 @@
 import { NextResponse } from 'next/server';
 import db from '@/lib/db';
 import { logAudit } from '@/lib/audit';
-import { cookies } from 'next/headers';
+import { getAdmin } from '@/lib/admin-auth';
 
 export async function POST(request: Request) {
   try {
-    const adminToken = (await cookies()).get('admin_token')?.value;
-    if (adminToken !== process.env.ADMIN_SECRET) {
-       const adminSecret = request.headers.get('x-admin-secret');
-       if (adminSecret !== process.env.ADMIN_SECRET) {
-         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-       }
+    const admin = await getAdmin();
+    if (!admin) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const { submissionId, action } = await request.json();

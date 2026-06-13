@@ -59,23 +59,25 @@ export async function analyzeGitHubRepo(url: string): Promise<RepoAnalysis | nul
     if (fileContents['composer.json']) techStack.push('PHP', 'Laravel');
 
     // 4. Database Detection
-    let database = 'Unknown';
+    let database = 'SQLite (Inferred)';
     const allContent = Object.values(fileContents).join(' ').toLowerCase();
 
-    if (structure.some(p => p.includes('mongo')) || allContent.includes('mongoose') || allContent.includes('mongodb')) database = 'MongoDB';
-    else if (structure.some(p => p.includes('mysql')) || allContent.includes('mysql')) database = 'MySQL';
-    else if (structure.some(p => p.includes('postgres')) || allContent.includes('postgresql') || allContent.includes('psycopg2')) database = 'PostgreSQL';
-    else if (structure.some(p => p.includes('sqlite')) || allContent.includes('sqlite')) database = 'SQLite';
-    else if (allContent.includes('prisma') || allContent.includes('sequelize')) database = 'SQL';
+    if (structure.some(p => p.includes('mongo')) || allContent.includes('mongoose') || allContent.includes('mongodb') || allContent.includes('pymongo')) database = 'MongoDB';
+    else if (structure.some(p => p.includes('mysql')) || allContent.includes('mysql') || allContent.includes('mysql-connector')) database = 'MySQL';
+    else if (structure.some(p => p.includes('postgres')) || allContent.includes('postgresql') || allContent.includes('psycopg2') || allContent.includes('pg-promise')) database = 'PostgreSQL';
+    else if (allContent.includes('prisma') || allContent.includes('sequelize') || allContent.includes('typeorm') || allContent.includes('hibernate')) database = 'SQL Relational';
+    else if (allContent.includes('firebase') || allContent.includes('firestore')) database = 'Firebase Firestore';
 
     // 5. Feature Detection
     const features: string[] = [];
-    if (structure.some(p => p.includes('auth') || p.includes('login') || p.includes('signup'))) features.push('Authentication');
-    if (structure.some(p => p.includes('api') || p.includes('routes/'))) features.push('REST API');
-    if (structure.some(p => p.includes('dashboard') || p.includes('admin'))) features.push('Dashboard');
-    if (structure.some(p => p.includes('payment') || p.includes('stripe') || p.includes('razorpay'))) features.push('Payment Gateway');
-    if (structure.some(p => p.includes('chat') || p.includes('socket'))) features.push('Real-time Chat');
-    if (structure.some(p => p.includes('upload') || p.includes('storage'))) features.push('File Uploads');
+    if (structure.some(p => p.includes('auth') || p.includes('login') || p.includes('signup')) || allContent.includes('passport') || allContent.includes('jwt')) features.push('Secure User Authentication');
+    if (structure.some(p => p.includes('api') || p.includes('routes/')) || allContent.includes('express') || allContent.includes('fastapi')) features.push('RESTful API Architecture');
+    if (structure.some(p => p.includes('dashboard') || p.includes('admin'))) features.push('Role-based Admin Dashboard');
+    if (structure.some(p => p.includes('payment') || p.includes('stripe') || p.includes('razorpay') || allContent.includes('payment'))) features.push('Payment Gateway Integration');
+    if (structure.some(p => p.includes('chat') || p.includes('socket')) || allContent.includes('socket.io')) features.push('Real-time Communications');
+    if (structure.some(p => p.includes('upload') || p.includes('storage')) || allContent.includes('multer') || allContent.includes('aws-sdk')) features.push('Cloud Storage & File Handling');
+    if (allContent.includes('chart') || allContent.includes('d3') || allContent.includes('recharts')) features.push('Data Visualization & Analytics');
+    if (allContent.includes('search') || allContent.includes('elastic') || allContent.includes('algolia')) features.push('Full-text Search Capabilities');
 
     // 6. Architecture Inference
     let architecture = 'Monolithic';

@@ -3,6 +3,7 @@ import { notFound, redirect } from 'next/navigation';
 import { SECTIONS } from '@/lib/prompts';
 import Link from 'next/link';
 import { cookies } from 'next/headers';
+import UnlockActions from '@/components/UnlockActions';
 
 export const dynamic = 'force-dynamic';
 
@@ -29,6 +30,9 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
   const content = JSON.parse(project.content);
   const isPaid = project.is_paid === 1;
   const freeSections = ["Abstract", "Objectives"];
+
+  const user = db.prepare('SELECT free_generation_credits FROM users WHERE id = ?').get(userId) as { free_generation_credits: number } | undefined;
+  const hasCredits = (user?.free_generation_credits || 0) > 0;
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
@@ -89,9 +93,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
                 We&apos;ve analyzed your {project.project_type} project and prepared a 17-section comprehensive documentation package tailored for {project.university} guidelines.
               </p>
               {!isPaid && (
-                 <Link href={`/project/${project.id}/pay`} className="bg-white text-blue-600 px-8 py-4 rounded-2xl font-black inline-block hover:bg-slate-50 transition">
-                    Unlock Full Submission Kit Now →
-                 </Link>
+                 <UnlockActions projectId={project.id} hasCredits={hasCredits} />
               )}
            </div>
         </div>

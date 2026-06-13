@@ -105,13 +105,13 @@ export default function Home() {
         <section className="py-24 px-6 max-w-6xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
             <div>
-              <h2 className="text-4xl font-black text-slate-900 mb-8 leading-tight">Why Final Year Students <br/>Trust ReportReady</h2>
+              <h2 className="text-4xl font-black text-slate-900 mb-8 leading-tight">Clear Your Final Year Project <br/>Submission This Week</h2>
               <div className="space-y-8">
                 {[
-                  { title: "Saves 40+ Hours", desc: "Writing a 70-page project report takes weeks. We do it in 2 minutes." },
-                  { title: "Viva Preparation Built-in", desc: "Get 50+ tailored Viva questions with answers to help you clear your presentation." },
-                  { title: "Direct GitHub Sync", desc: "No manual copying. We infer your modules directly from your source code." },
-                  { title: "University Standard", desc: "Generates professional content suitable for BTech, MCA, and Diploma submissions." }
+                  { title: "Ready-to-submit project report", desc: "Get a comprehensive 17-section documentation package that meets university standards instantly." },
+                  { title: "Clear Your Viva with Confidence", desc: "Get 50+ tailored Viva questions with detailed answers to help you clear your presentation." },
+                  { title: "Upload your project & get report", desc: "Simply upload your GitHub repo or ZIP code. We extract tech stack and modules automatically." },
+                  { title: "Finish your report in minutes", desc: "Saves 40+ hours of manual writing. Focus on your project demo, not the paperwork." }
                 ].map((reason, i) => (
                   <div key={i} className="flex gap-4">
                     <div className="flex-shrink-0 w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold">✓</div>
@@ -171,12 +171,42 @@ export default function Home() {
            </div>
         </section>
 
+        {/* Founding Student Feedback Program */}
+        <section className="py-24 px-6 bg-slate-900 text-white relative overflow-hidden">
+           <div className="absolute top-0 right-0 w-96 h-96 bg-blue-600 blur-[150px] opacity-20"></div>
+           <div className="max-w-4xl mx-auto text-center relative z-10">
+              <div className="inline-flex items-center gap-2 bg-blue-500/20 text-blue-300 px-4 py-2 rounded-full text-xs font-black uppercase tracking-widest mb-8 border border-blue-500/30">
+                ⭐ Founding Student Program
+              </div>
+              <h2 className="text-4xl md:text-5xl font-black mb-8">Help Us Improve, <br/>Get Your Report <span className="text-blue-400">FREE</span></h2>
+              <p className="text-xl text-slate-300 mb-12 font-medium leading-relaxed">
+                We&apos;re building the future of academic documentation. Share genuine, detailed feedback about your experience and we&apos;ll grant you one free premium report unlock.
+              </p>
+              <div className="grid md:grid-cols-3 gap-6 text-left mb-12">
+                 {[
+                   { t: "Step 1", d: "Generate your project preview" },
+                   { t: "Step 2", d: "Submit detailed feedback (100+ chars)" },
+                   { t: "Step 3", d: "Get 1 Free Premium Credit" }
+                 ].map((s, i) => (
+                   <div key={i} className="bg-white/5 border border-white/10 p-6 rounded-2xl">
+                      <div className="text-blue-400 font-black text-sm uppercase tracking-widest mb-2">{s.t}</div>
+                      <div className="font-bold text-slate-100">{s.d}</div>
+                   </div>
+                 ))}
+              </div>
+              <Link href="/generate" className="bg-blue-600 text-white px-10 py-5 rounded-2xl text-xl font-black hover:bg-blue-700 transition shadow-2xl inline-block">
+                 Join Founding Program
+              </Link>
+              <p className="mt-6 text-slate-500 text-xs font-bold uppercase tracking-widest">Limited to one free reward per student</p>
+           </div>
+        </section>
+
         {/* Pricing Card */}
         <section className="py-32 px-6">
           <div className="max-w-lg mx-auto bg-white p-12 rounded-[3rem] border-2 border-slate-100 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)] relative text-center">
             <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-blue-600 text-white px-6 py-2 rounded-full text-sm font-black uppercase tracking-widest">Limited Offer</div>
-            <h2 className="text-3xl font-black text-slate-900 mb-2">Unlock Your Full Kit</h2>
-            <p className="text-slate-500 font-medium mb-8 italic">Everything you need for submission.</p>
+            <h2 className="text-3xl font-black text-slate-900 mb-2">Complete Submission Kit</h2>
+            <p className="text-slate-500 font-medium mb-8 italic">Everything you need to clear your project.</p>
             <div className="flex items-center justify-center gap-2 mb-10">
               <span className="text-slate-400 line-through text-2xl font-bold">₹499</span>
               <span className="text-6xl font-black text-slate-900">₹99</span>

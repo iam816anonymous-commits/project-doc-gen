@@ -78,6 +78,9 @@ export async function POST(request: Request) {
       } else {
         // 3. Gemini Generation
         try {
+          // Check for active university template
+          const template = db.prepare('SELECT * FROM university_templates WHERE university_name = ? AND status = "ACTIVE" ORDER BY created_at DESC LIMIT 1').get(details.university) as any;
+
           content = await generateProjectDocumentation({
             title: details.title,
             category: details.projectType,
@@ -86,7 +89,8 @@ export async function POST(request: Request) {
             problemStatement: details.problemStatement,
             academicLevel: details.academicLevel,
             university: details.university,
-            repoAnalysis: sourceAnalysis || undefined
+            repoAnalysis: sourceAnalysis || undefined,
+            template: template || undefined
           });
 
           // 4. Cache the result
