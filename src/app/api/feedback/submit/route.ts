@@ -13,7 +13,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
     }
 
-    const { rating, useful, missing, confused, recommend } = data;
+    const { rating, useful, missing, confused, recommend, issueType, pageUrl } = data;
     const combinedFeedback = `${useful} ${missing} ${confused}`;
 
     // 1. Minimum Length Check
@@ -36,9 +36,9 @@ export async function POST(request: Request) {
 
     const feedbackId = uuidv4();
     db.prepare(`
-      INSERT INTO feedback (id, user_id, rating, what_was_useful, what_was_missing, what_confused_you, recommend, status)
-      VALUES (?, ?, ?, ?, ?, ?, ?, 'PENDING')
-    `).run(feedbackId, userId, rating, useful, missing, confused, recommend ? 1 : 0);
+      INSERT INTO feedback (id, user_id, rating, what_was_useful, what_was_missing, what_confused_you, recommend, issue_type, page_url, status)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'PENDING')
+    `).run(feedbackId, userId, rating, useful, missing, confused, recommend ? 1 : 0, issueType || 'Standard', pageUrl || null);
 
     return NextResponse.json({ success: true, message: 'Feedback submitted successfully! Our team will review it and grant your reward.' });
   } catch (error) {

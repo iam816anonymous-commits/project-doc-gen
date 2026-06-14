@@ -87,6 +87,8 @@ db.exec(`
     what_confused_you TEXT,
     recommend BOOLEAN,
     comment TEXT,
+    issue_type TEXT,
+    page_url TEXT,
     status TEXT DEFAULT 'PENDING', -- PENDING, APPROVED, REJECTED
     reward_granted BOOLEAN DEFAULT 0,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,

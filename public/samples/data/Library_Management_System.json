@@ -1,0 +1,7 @@
+{
+  "Abstract": "Digital Library System aimed at managing book inventories, member registrations, and issuance/return tracking. It provides a robust interface for librarians to monitor assets in real-time.",
+  "Objectives": "1. Track book availability.\n2. Manage member accounts.\n3. Automate fine calculation.\n4. Generate monthly reports.",
+  "Modules": "1. Book Management\n2. Member Management\n3. Transaction Module (Issue/Return)\n4. Analytics Dashboard",
+  "Viva Questions": "Q: How do you handle book issuance?\nA: By checking member eligibility and updating book status in the database.",
+  "PPT Outline": "Slide 1: Project Overview\nSlide 2: System Architecture\nSlide 3: ER Diagram\nSlide 4: Demo Screenshots\nSlide 5: Future Scope"
+}

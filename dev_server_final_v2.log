@@ -6,9 +6,10 @@
  ⚠ Port 3001 is in use, trying 3002 instead.
  ⚠ Port 3002 is in use, trying 3003 instead.
  ⚠ Port 3003 is in use, trying 3004 instead.
+ ⚠ Port 3004 is in use, trying 3005 instead.
    ▲ Next.js 15.1.4
-   - Local:        http://localhost:3004
-   - Network:      http://192.168.0.2:3004
+   - Local:        http://localhost:3005
+   - Network:      http://192.168.0.2:3005
 
  ✓ Starting...
- ✓ Ready in 3.3s
+ ✓ Ready in 2.8s
