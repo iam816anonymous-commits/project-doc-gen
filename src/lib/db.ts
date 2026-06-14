@@ -89,6 +89,7 @@ db.exec(`
     comment TEXT,
     issue_type TEXT,
     page_url TEXT,
+    project_id TEXT,
     status TEXT DEFAULT 'PENDING', -- PENDING, APPROVED, REJECTED
     reward_granted BOOLEAN DEFAULT 0,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -202,6 +203,15 @@ try {
 } catch (e) {}
 try {
   db.exec(`ALTER TABLE users ADD COLUMN free_generation_credits INTEGER DEFAULT 0`);
+} catch (e) {}
+try {
+  db.exec(`ALTER TABLE feedback ADD COLUMN issue_type TEXT`);
+} catch (e) {}
+try {
+  db.exec(`ALTER TABLE feedback ADD COLUMN page_url TEXT`);
+} catch (e) {}
+try {
+  db.exec(`ALTER TABLE feedback ADD COLUMN project_id TEXT`);
 } catch (e) {}
 
 export default db;

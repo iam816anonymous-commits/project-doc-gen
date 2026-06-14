@@ -1,7 +1,0 @@
-{
-  "Abstract": "A cloud-based Attendance Management System utilizing facial recognition and GPS tagging to ensure accurate student/employee tracking. Designed to replace manual registers with a tamper-proof digital system.",
-  "Objectives": "1. Eliminate proxy attendance.\n2. Real-time reporting.\n3. Integration with notification systems.\n4. Scalable data management.",
-  "Modules": "1. Biometric/Face ID Module\n2. User Portal\n3. Reporting Engine\n4. Mobile Application",
-  "Viva Questions": "Q: Why is biometric better than manual?\nA: It prevents fraud and provides instant data for analytics.",
-  "PPT Outline": "Slide 1: Introduction\nSlide 2: Technology Used\nSlide 3: Implementation Detail\nSlide 4: Results\nSlide 5: QA"
-}

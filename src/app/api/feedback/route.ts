@@ -12,7 +12,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { rating, comment } = await request.json();
+    const { rating, comment, projectId } = await request.json();
 
     if (!rating || rating < 1 || rating > 5) {
       return NextResponse.json({ error: 'Valid rating (1-5) is required' }, { status: 400 });
@@ -20,9 +20,9 @@ export async function POST(request: Request) {
 
     const id = uuidv4();
     db.prepare(`
-      INSERT INTO feedback (id, user_id, rating, comment)
-      VALUES (?, ?, ?, ?)
-    `).run(id, userId, rating, comment);
+      INSERT INTO feedback (id, user_id, rating, comment, project_id, issue_type)
+      VALUES (?, ?, ?, ?, ?, ?)
+    `).run(id, userId, rating, comment, projectId || null, 'Testing Mode Feedback');
 
     return NextResponse.json({ success: true });
   } catch (error) {

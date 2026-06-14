@@ -1,7 +1,0 @@
-{
-  "Abstract": "The Hospital Management System is a comprehensive software solution designed to streamline healthcare operations. It manages patient records, doctor schedules, and billing processes to improve efficiency and reduce human error in medical environments.",
-  "Objectives": "1. Automate patient registration.\n2. Manage doctor-patient appointments.\n3. Digitalize medical history storage.\n4. Simplify billing and discharge procedures.",
-  "Modules": "1. Admin Module: User management and system settings.\n2. Doctor Module: Consultation logs and schedule management.\n3. Patient Module: Profile access and appointment booking.\n4. Pharmacy Module: Inventory tracking and prescription management.",
-  "Viva Questions": "Q: What is the primary goal of this system?\nA: To digitalize and automate healthcare workflows for better efficiency.\nQ: What tech stack is used?\nA: React for frontend, Node.js for backend, and SQLite for data storage.",
-  "PPT Outline": "Slide 1: Title\nSlide 2: Problem Statement\nSlide 3: Proposed System\nSlide 4: Key Modules\nSlide 5: Database Design\nSlide 6: Conclusion"
-}

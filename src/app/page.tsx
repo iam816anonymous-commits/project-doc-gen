@@ -34,8 +34,8 @@ export default function Home() {
                <span className="text-blue-600 underline decoration-blue-200 underline-offset-8">Tomorrow?</span>
              </h1>
              <p className="text-xl text-slate-600 mb-12 max-w-2xl mx-auto leading-relaxed font-bold">
-               Upload Your Project. <br/>
-               Get A Complete Submission Kit.
+               Get Complete Report + Viva + PPT in Minutes. <br/>
+               <span className="text-slate-500 font-medium">Upload Any Project Format. We handle the rest.</span>
              </p>
              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <Link href="/generate" className="w-full sm:w-auto bg-blue-600 text-white px-10 py-5 rounded-2xl text-xl font-black hover:bg-blue-700 transition shadow-2xl shadow-blue-200 inline-block">
@@ -59,7 +59,7 @@ export default function Home() {
         <section id="generate" className="py-24 bg-white px-6">
            <div className="max-w-6xl mx-auto text-center">
               <h2 className="text-4xl font-black text-slate-900 mb-4">Start Here</h2>
-              <p className="text-slate-500 mb-12">Works with GitHub, ZIP, PDF, and DOCX files.</p>
+              <p className="text-slate-500 mb-12">Select your project source to begin automatic analysis.</p>
 
               <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
                  {[

@@ -1,32 +1,23 @@
 export default function TermsPage() {
   return (
-    <div className="min-h-screen bg-slate-50 py-20 px-6">
-      <div className="max-w-3xl mx-auto bg-white p-8 md:p-16 rounded-[3rem] shadow-sm border border-slate-100">
-        <h1 className="text-4xl font-black text-slate-900 mb-4">Terms of Service</h1>
-        <p className="text-slate-500 font-bold mb-10 pb-10 border-b">Last Updated: June 15, 2026</p>
+    <div className="max-w-3xl mx-auto py-12 px-6 prose prose-blue">
+      <h1>Terms of Service</h1>
+      <p className="text-gray-500">Last Updated: June 15, 2026</p>
 
-        <div className="prose prose-slate max-w-none">
-          <h2>1. Acceptance of Terms</h2>
-          <p>By using ReportReady, you agree to these terms and our Academic Integrity policy. If you do not agree, please do not use our service.</p>
+      <h2>1. Acceptance of Terms</h2>
+      <p>By using ReportReady, you agree to be bound by these terms. If you do not agree, do not use the service.</p>
 
-          <h2>2. Service Description</h2>
-          <p>ReportReady provides an AI-powered drafting assistant for academic project documentation. The content generated is intended to be used as a template or starting point only.</p>
+      <h2>2. Description of Service</h2>
+      <p>ReportReady is an AI-powered project documentation generator designed to assist students in creating academic reports.</p>
 
-          <h2>3. User Responsibilities</h2>
-          <p>You are responsible for:</p>
-          <ul>
-            <li>Providing accurate project information.</li>
-            <li>Verifying the accuracy of all generated content.</li>
-            <li>Complying with your educational institution&apos;s rules regarding AI usage.</li>
-          </ul>
+      <h2>3. User Responsibilities</h2>
+      <p>Users are responsible for the accuracy of the input provided and must use the generated content in accordance with their institution&apos;s academic integrity policies.</p>
 
-          <h2>4. Payments & Delivery</h2>
-          <p>Full project kits are unlocked upon verification of payment. We reserve the right to refuse service if fraudulent activity is suspected.</p>
+      <h2>4. Intellectual Property</h2>
+      <p>The system and its original content are owned by ReportReady AI. The generated documentation is for the user&apos;s personal academic use.</p>
 
-          <h2>5. Intellectual Property</h2>
-          <p>You retain ownership of the project details you provide. ReportReady grants you a non-exclusive license to use the generated content for your personal academic requirements.</p>
-        </div>
-      </div>
+      <h2>5. Limitation of Liability</h2>
+      <p>ReportReady is provided &quot;as is&quot; without any warranties. We are not liable for any academic or professional consequences resulting from the use of our generated content.</p>
     </div>
   );
 }
