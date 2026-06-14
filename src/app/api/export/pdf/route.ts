@@ -13,7 +13,11 @@ export async function GET(request: Request) {
 
   const project = db.prepare('SELECT * FROM projects WHERE id = ? AND user_id = ?').get(projectId, userId) as any;
   if (!project) return NextResponse.json({ error: 'Project not found' }, { status: 404 });
-  if (project.is_paid !== 1) return NextResponse.json({ error: 'Payment required' }, { status: 402 });
+
+  const isPaymentsEnabled = process.env.ENABLE_PAYMENTS !== 'false';
+  if (isPaymentsEnabled && project.is_paid !== 1) {
+    return NextResponse.json({ error: 'Payment required' }, { status: 402 });
+  }
 
   const content = JSON.parse(project.content);
   const user = db.prepare('SELECT email FROM users WHERE id = ?').get(project.user_id) as any;

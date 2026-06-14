@@ -53,7 +53,7 @@ export default function OTPLogin({ onSuccess }: { onSuccess: (userId: string) =>
   return (
     <div className="bg-white p-8 rounded-[2rem] border shadow-sm max-w-md mx-auto">
       <h2 className="text-2xl font-black mb-2">Login to Continue</h2>
-      <p className="text-slate-500 mb-6 font-medium">We'll send a 6-digit code to your email.</p>
+      <p className="text-slate-500 mb-6 font-medium">We&apos;ll send a 6-digit code to your email.</p>
 
       {step === 'email' ? (
         <form onSubmit={handleRequestOTP} className="space-y-4">

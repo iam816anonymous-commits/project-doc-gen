@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { Check, X, MessageSquare, CreditCard, Share2, Star } from 'lucide-react';
+import { Check, MessageSquare, CreditCard, Share2, Star } from 'lucide-react';
+import Image from 'next/image';
 
 export default function AdminTabs({ submissions, feedback, evidence }: any) {
   const [activeTab, setActiveTab] = useState('payments');
@@ -113,7 +114,7 @@ export default function AdminTabs({ submissions, feedback, evidence }: any) {
             {evidence.map((ev: any) => (
               <div key={ev.id} className="bg-gray-50 rounded-2xl border overflow-hidden">
                 <div className="aspect-video relative group">
-                  <img src={ev.image_path} alt="Evidence" className="w-full h-full object-cover" />
+                  <Image src={ev.image_path} alt="Evidence" fill className="object-cover" />
                   <a href={ev.image_path} target="_blank" className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white font-bold transition-opacity">View Full Size</a>
                 </div>
                 <div className="p-4">

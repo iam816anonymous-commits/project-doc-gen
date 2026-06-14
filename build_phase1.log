@@ -1,0 +1,19 @@
+
+> jules-app@0.1.0 build
+> next build
+
+   ▲ Next.js 15.1.4
+
+   Creating an optimized production build ...
+Failed to compile.
+
+./src/lib/template-extractor.ts
+Module not found: Package path ./lib/pdf-parse.js is not exported from package /app/node_modules/pdf-parse (see exports field in /app/node_modules/pdf-parse/package.json)
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./src/app/api/contribute/templates/route.ts
+
+
+> Build failed because of webpack errors

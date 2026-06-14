@@ -3,14 +3,13 @@ import db from '@/lib/db';
 import { v4 as uuidv4 } from 'uuid';
 import { generateProjectDocumentation, generateProjectEmbedding } from '@/lib/gemini';
 import { createFingerprint, calculateSimilarity } from '@/lib/similarity';
-import { analyzeGitHubRepo } from '@/lib/repository-analyzer';
 import { cookies } from 'next/headers';
 
 export async function POST(request: Request) {
   try {
     const details = await request.json();
     const cookieStore = await cookies();
-    let userId = cookieStore.get('user_id')?.value;
+    const userId = cookieStore.get('user_id')?.value;
 
     if (!userId) {
       return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
@@ -23,7 +22,7 @@ export async function POST(request: Request) {
     }
 
     // 1. Multi-Source Analysis
-    let sourceAnalysis = details.profile || null;
+    const sourceAnalysis = details.profile || null;
 
     // profile is already prepared by the client using the ProjectProfiler or passed directly
     // This allows the "Smart Confirmation" step to happen on the client.
@@ -108,12 +107,14 @@ export async function POST(request: Request) {
     }
 
     const projectId = uuidv4();
+    const isPaid = process.env.ENABLE_PAYMENTS === 'false' ? 1 : 0;
+
     db.prepare(`
       INSERT INTO projects (
         id, user_id, title, project_type, tech_stack,
         problem_statement, features, team_size,
-        academic_level, content, github_url, university
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        academic_level, content, is_paid, github_url, university
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `).run(
       projectId,
       userId,
@@ -125,6 +126,7 @@ export async function POST(request: Request) {
       details.teamSize,
       details.academicLevel,
       JSON.stringify(content),
+      isPaid,
       details.githubUrl || null,
       details.university || 'Standard'
     );

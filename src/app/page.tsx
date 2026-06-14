@@ -59,7 +59,7 @@ export default function Home() {
         <section id="generate" className="py-24 bg-white px-6">
            <div className="max-w-6xl mx-auto text-center">
               <h2 className="text-4xl font-black text-slate-900 mb-4">Start Here</h2>
-              <p className="text-slate-500 mb-12">Select your project source to begin automatic analysis.</p>
+              <p className="text-slate-500 mb-12">Upload your project to get started.</p>
 
               <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
                  {[
@@ -87,8 +87,8 @@ export default function Home() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                  {[
-                   { step: "01", title: "Select Your Source", desc: "Upload code (ZIP), link GitHub, or provide an existing draft report (PDF/DOCX)." },
-                   { step: "02", title: "Analyze & Extract", desc: "Our engine extracts your tech stack, features, and system architecture automatically." },
+                   { step: "01", title: "Upload Project", desc: "Upload code (ZIP), link GitHub, or provide an existing draft report (PDF/DOCX)." },
+                   { step: "02", title: "Get Insights", desc: "Our engine extracts your tech stack, features, and system architecture automatically." },
                    { step: "03", title: "Unlock Your Kit", desc: "Download your 17-section project report, 50+ Viva Q&A, and professional PPT slides." }
                  ].map((item, i) => (
                    <div key={i} className="bg-white p-10 rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl transition-shadow group">

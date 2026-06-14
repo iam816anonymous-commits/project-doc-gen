@@ -21,8 +21,13 @@ export async function GET(request: Request) {
     is_paid: number;
   } | undefined;
 
-  if (!project || project.is_paid !== 1 || project.user_id !== userId) {
-    return NextResponse.json({ error: 'Unauthorized or not paid' }, { status: 403 });
+  if (!project || project.user_id !== userId) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
+  }
+
+  const isPaymentsEnabled = process.env.ENABLE_PAYMENTS !== 'false';
+  if (isPaymentsEnabled && project.is_paid !== 1) {
+    return NextResponse.json({ error: 'Payment required' }, { status: 402 });
   }
 
   const content = JSON.parse(project.content);

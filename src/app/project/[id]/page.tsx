@@ -3,6 +3,8 @@ import { notFound, redirect } from 'next/navigation';
 import { SECTIONS } from '@/lib/prompts';
 import Link from 'next/link';
 import { cookies } from 'next/headers';
+import TestingModeBanner from '@/components/TestingModeBanner';
+import FeedbackWall from '@/components/FeedbackWall';
 
 export const dynamic = 'force-dynamic';
 
@@ -27,11 +29,13 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
   if (project.user_id !== userId) redirect('/');
 
   const content = JSON.parse(project.content);
-  const isPaid = project.is_paid === 1;
+  const isPaymentsEnabled = process.env.ENABLE_PAYMENTS !== 'false';
+  const isPaid = !isPaymentsEnabled || project.is_paid === 1;
   const freeSections = ["Abstract", "Objectives"];
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
+      {!isPaymentsEnabled && <TestingModeBanner />}
       <header className="bg-white border-b px-8 py-6 sticky top-0 z-50 shadow-sm">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex items-center gap-4">
@@ -88,10 +92,16 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
               <p className="text-blue-100 font-medium mb-8 leading-relaxed">
                 We&apos;ve analyzed your {project.project_type} project and prepared a 17-section comprehensive documentation package tailored for {project.university} guidelines.
               </p>
-              {!isPaid && (
+              {!isPaid ? (
                  <Link href={`/project/${project.id}/pay`} className="bg-white text-blue-600 px-8 py-4 rounded-2xl font-black inline-block hover:bg-slate-50 transition">
                     Unlock Full Submission Kit Now →
                  </Link>
+              ) : (
+                 !isPaymentsEnabled && (
+                    <div className="mt-8">
+                       <FeedbackWall projectId={project.id} />
+                    </div>
+                 )
               )}
            </div>
         </div>

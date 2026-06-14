@@ -1,7 +1,7 @@
 import AdmZip from 'adm-zip';
 import pdf from 'pdf-parse';
 import mammoth from 'mammoth';
-import { analyzeGitHubRepo, RepoAnalysis } from './repository-analyzer';
+import { analyzeGitHubRepo } from "./repository-analyzer";
 
 export interface ProjectProfile {
   title: string;

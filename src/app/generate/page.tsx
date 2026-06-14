@@ -140,12 +140,12 @@ export default function GenerationPage() {
         <div className="text-center mb-12">
           <h1 className="text-3xl md:text-4xl font-black text-slate-900 mb-2">
             {step === 'input' ? (sourceType === 'manual' ? 'Describe Your Project' : 'Upload Your Project') :
-             step === 'analyze' ? 'Analyzing Source...' :
+             step === 'analyze' ? 'Building Your Report...' :
              'Verify Project Intelligence'}
           </h1>
           <p className="text-slate-500 font-medium">
              {step === 'input' ? 'Select your source file or link' :
-              step === 'analyze' ? 'Identifying tech stack and features...' :
+              step === 'analyze' ? 'Analyzing your project files...' :
               'Our AI identified these details. Please confirm.'}
           </p>
         </div>

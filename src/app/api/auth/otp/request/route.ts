@@ -1,3 +1,4 @@
+import { sendOTPEmail } from "@/lib/email";
 import { NextResponse } from 'next/server';
 import db from '@/lib/db';
 import { v4 as uuidv4 } from 'uuid';
@@ -23,8 +24,7 @@ export async function POST(request: Request) {
 
     db.prepare('INSERT INTO otps (id, email, code_hash, expires_at) VALUES (?, ?, ?, ?)').run(uuidv4(), email, codeHash, expiresAt);
 
-    // In production, use Resend or another provider.
-    console.log(`[PRODUCTION AUTH] OTP for ${email}: ${code}`);
+    await sendOTPEmail(email, code);
 
     return NextResponse.json({ success: true });
   } catch (error) {

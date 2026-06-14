@@ -92,7 +92,7 @@ function ReviewContent() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div className="space-y-3">
-                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] block">Detected Tech Stack</label>
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] block">Technologies Used</label>
                     <div className="flex flex-wrap gap-2">
                       {profile.techStack?.map((t: string) => (
                         <span key={t} className="bg-blue-50 text-blue-700 px-3 py-1 rounded-lg text-xs font-black flex items-center gap-1">
@@ -111,7 +111,7 @@ function ReviewContent() {
 
                 <div className="p-6 bg-slate-900 rounded-3xl text-white">
                     <div className="flex justify-between items-center mb-4">
-                        <span className="text-[10px] font-black uppercase tracking-widest opacity-50">Inferred Architecture</span>
+                        <span className="text-[10px] font-black uppercase tracking-widest opacity-50">System Architecture</span>
                         <span className="bg-blue-600 text-[10px] font-black px-2 py-1 rounded uppercase">AI Match</span>
                     </div>
                     <p className="text-lg font-bold">{profile.architecture || 'Modular Monolithic'}</p>

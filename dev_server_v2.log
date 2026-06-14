@@ -65,3 +65,53 @@
  ✓ Compiled in 2.9s (514 modules)
  ✓ Compiled in 424ms (514 modules)
  ✓ Compiled in 164ms (514 modules)
+ ✓ Compiled in 4.4s (900 modules)
+ ✓ Compiled in 251ms (514 modules)
+ ✓ Compiled in 647ms (514 modules)
+ ✓ Compiled in 367ms (514 modules)
+ ✓ Compiled in 151ms (514 modules)
+ ✓ Compiled in 169ms (514 modules)
+ ✓ Compiled in 519ms (900 modules)
+ ✓ Compiled in 132ms (514 modules)
+ ✓ Compiled in 119ms (514 modules)
+ ✓ Compiled in 112ms (514 modules)
+ ✓ Compiled in 343ms (514 modules)
+ ✓ Compiled in 185ms (514 modules)
+ ✓ Compiled in 129ms (514 modules)
+ ✓ Compiled in 959ms (900 modules)
+ ✓ Compiled in 378ms (514 modules)
+ ✓ Compiled in 156ms (514 modules)
+ ✓ Compiled in 291ms (514 modules)
+ ✓ Compiled / in 318ms (390 modules)
+ ⨯ [Error: Invariant: missing bootstrap script. This is a bug in Next.js] {
+  page: '/'
+}
+ ○ Compiling /_error ...
+ ✓ Compiled /_error in 519ms (892 modules)
+ GET / 500 in 1887ms
+ GET / 200 in 271ms
+ GET / 200 in 185ms
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 1053ms (896 modules)
+ GET /_next/static/css/app/layout.css?v=1781452379497 404 in 1089ms
+ GET /_next/static/media/7d4881bb7e1bf84d-s.p.woff2 404 in 1046ms
+ GET /_next/static/media/22a5144ee8d83bca-s.p.woff2 404 in 1047ms
+ GET /_next/static/chunks/app-pages-internals.js 404 in 766ms
+ GET /_next/static/chunks/main-app.js?v=1781452379497 404 in 782ms
+ GET /_next/static/chunks/app/page.js 404 in 755ms
+ GET /generate 200 in 73ms
+ GET /_next/static/css/app/layout.css?v=1781452380915 404 in 55ms
+ GET /_next/static/media/22a5144ee8d83bca-s.p.woff2 404 in 120ms
+ GET /_next/static/media/7d4881bb7e1bf84d-s.p.woff2 404 in 119ms
+ GET /_next/static/chunks/app-pages-internals.js 404 in 70ms
+ GET /_next/static/chunks/main-app.js?v=1781452380915 404 in 72ms
+ GET /_next/static/chunks/app/page.js 404 in 68ms
+ GET /_next/static/chunks/app/generate/page.js 404 in 51ms
+ ✓ Compiled /academic-integrity in 272ms (900 modules)
+ GET /academic-integrity 200 in 392ms
+ GET /_next/static/css/app/layout.css?v=1781452381539 404 in 52ms
+ GET /_next/static/media/7d4881bb7e1bf84d-s.p.woff2 404 in 99ms
+ GET /_next/static/media/22a5144ee8d83bca-s.p.woff2 404 in 101ms
+ GET /_next/static/chunks/app-pages-internals.js 404 in 65ms
+ GET /_next/static/chunks/main-app.js?v=1781452381539 404 in 68ms
+ GET /_next/static/chunks/app/page.js 404 in 53ms

@@ -9,7 +9,6 @@ const genAI = new GoogleGenerativeAI(apiKey);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 const embeddingModel = genAI.getGenerativeModel({ model: "text-embedding-004" });
 
-import { RepoAnalysis } from "./repository-analyzer";
 
 import { ProjectProfile } from "./project-profiler";
 

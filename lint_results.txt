@@ -1,0 +1,67 @@
+
+> jules-app@0.1.0 lint
+> eslint
+
+
+/app/src/app/admin/AdminTabs.tsx
+  116:19  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+/app/src/app/admin/templates/page.tsx
+  4:33  warning  'XCircle' is defined but never used  @typescript-eslint/no-unused-vars
+
+/app/src/app/api/admin/login/route.ts
+  36:12  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars
+
+/app/src/app/api/analyze/github/route.ts
+  24:12  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars
+
+/app/src/app/api/analyze/route.ts
+  22:11  warning  'detectedMime' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/app/src/app/api/generate/route.ts
+   6:10  warning  'analyzeGitHubRepo' is defined but never used  @typescript-eslint/no-unused-vars
+  60:18  warning  'e' is defined but never used                  @typescript-eslint/no-unused-vars
+
+/app/src/app/api/referrals/status/route.ts
+  29:12  warning  '_error' is defined but never used  @typescript-eslint/no-unused-vars
+
+/app/src/app/feedback/page.tsx
+  38:14  warning  '_err' is defined but never used  @typescript-eslint/no-unused-vars
+
+/app/src/app/generate/page.tsx
+   13:10  warning  'userId' is assigned a value but never used  @typescript-eslint/no-unused-vars
+   59:14  warning  'err' is defined but never used              @typescript-eslint/no-unused-vars
+   84:14  warning  'err' is defined but never used              @typescript-eslint/no-unused-vars
+  122:14  warning  'err' is defined but never used              @typescript-eslint/no-unused-vars
+
+/app/src/app/generate/review/page.tsx
+   9:9   warning  'searchParams' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  56:14  warning  'err' is defined but never used                    @typescript-eslint/no-unused-vars
+
+/app/src/app/referrals/ReferralDashboardClient.tsx
+  36:14  warning  '_err' is defined but never used  @typescript-eslint/no-unused-vars
+
+/app/src/app/referrals/page.tsx
+  129:25  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+/app/src/components/OTPLogin.tsx
+   4:10  warning  'useRouter' is defined but never used  @typescript-eslint/no-unused-vars
+  26:14  warning  'err' is defined but never used        @typescript-eslint/no-unused-vars
+  46:14  warning  'err' is defined but never used        @typescript-eslint/no-unused-vars
+
+/app/src/lib/db.ts
+  197:10  warning  'e' is defined but never used  @typescript-eslint/no-unused-vars
+  200:10  warning  'e' is defined but never used  @typescript-eslint/no-unused-vars
+  203:10  warning  'e' is defined but never used  @typescript-eslint/no-unused-vars
+  206:10  warning  'e' is defined but never used  @typescript-eslint/no-unused-vars
+  209:10  warning  'e' is defined but never used  @typescript-eslint/no-unused-vars
+  212:10  warning  'e' is defined but never used  @typescript-eslint/no-unused-vars
+  215:10  warning  'e' is defined but never used  @typescript-eslint/no-unused-vars
+
+/app/src/lib/gemini.ts
+  12:10  warning  'RepoAnalysis' is defined but never used  @typescript-eslint/no-unused-vars
+
+/app/src/lib/project-profiler.ts
+  4:29  warning  'RepoAnalysis' is defined but never used  @typescript-eslint/no-unused-vars
+
+✖ 29 problems (0 errors, 29 warnings)
