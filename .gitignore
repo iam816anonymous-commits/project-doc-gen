@@ -29,7 +29,6 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
-*.log
 
 # env files (can opt-in for committing if needed)
 .env*
@@ -45,5 +44,3 @@ jules.db-shm
 jules.db-wal
 public/uploads/payments/*
 !public/uploads/payments/.gitkeep
-uploads/
-docs/sample-outputs/

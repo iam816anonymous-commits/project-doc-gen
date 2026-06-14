@@ -171,36 +171,6 @@ export default function Home() {
            </div>
         </section>
 
-        {/* Founding Student Feedback Program */}
-        <section className="py-24 px-6 bg-slate-900 text-white relative overflow-hidden">
-           <div className="absolute top-0 right-0 w-96 h-96 bg-blue-600 blur-[150px] opacity-20"></div>
-           <div className="max-w-4xl mx-auto text-center relative z-10">
-              <div className="inline-flex items-center gap-2 bg-blue-500/20 text-blue-300 px-4 py-2 rounded-full text-xs font-black uppercase tracking-widest mb-8 border border-blue-500/30">
-                ⭐ Founding Student Program
-              </div>
-              <h2 className="text-4xl md:text-5xl font-black mb-8">Help Us Improve, <br/>Get Your Report <span className="text-blue-400">FREE</span></h2>
-              <p className="text-xl text-slate-300 mb-12 font-medium leading-relaxed">
-                We&apos;re building the future of academic documentation. Share genuine, detailed feedback about your experience and we&apos;ll grant you one free premium report unlock.
-              </p>
-              <div className="grid md:grid-cols-3 gap-6 text-left mb-12">
-                 {[
-                   { t: "Step 1", d: "Generate your project preview" },
-                   { t: "Step 2", d: "Submit detailed feedback (100+ chars)" },
-                   { t: "Step 3", d: "Get 1 Free Premium Credit" }
-                 ].map((s, i) => (
-                   <div key={i} className="bg-white/5 border border-white/10 p-6 rounded-2xl">
-                      <div className="text-blue-400 font-black text-sm uppercase tracking-widest mb-2">{s.t}</div>
-                      <div className="font-bold text-slate-100">{s.d}</div>
-                   </div>
-                 ))}
-              </div>
-              <Link href="/generate" className="bg-blue-600 text-white px-10 py-5 rounded-2xl text-xl font-black hover:bg-blue-700 transition shadow-2xl inline-block">
-                 Join Founding Program
-              </Link>
-              <p className="mt-6 text-slate-500 text-xs font-bold uppercase tracking-widest">Limited to one free reward per student</p>
-           </div>
-        </section>
-
         {/* Pricing Card */}
         <section className="py-32 px-6">
           <div className="max-w-lg mx-auto bg-white p-12 rounded-[3rem] border-2 border-slate-100 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)] relative text-center">
